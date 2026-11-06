@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aplicație apart-hotel</title>
+<meta name="description" content="Demo interactiv: aplicația unui apart-hotel pentru oaspeți, administrator, proprietari și curățenie.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121316">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Apart-hotel">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --fond:#121316;--panou:#1C1E23;--panou2:#272A31;--text:#F2EFE9;--stins:#ADABA5;--linie:rgba(242,239,233,.13);
+  --aur:#DDA945;--aur-text:#231703;--verde:#74CC9F;--rosu:#F0918A;--booking:#83B5F2;--airbnb:#F394A8;--blocat:#8B8D94;
+  --titlu:"Cormorant Garamond","Iowan Old Style",Georgia,serif;--corp:"Figtree","Segoe UI",system-ui,sans-serif;
+  --tab:66px;color-scheme:dark;
+}
+*{box-sizing:border-box;margin:0}
+[hidden]{display:none!important}
+html,body{height:100%;background:#0B0C0E;color:var(--text);font-family:var(--corp);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:focus-visible{outline:2px solid var(--aur);outline-offset:2px}
+h1,h2,h3{font-family:var(--titlu);font-weight:500;text-wrap:balance}
+.scena{height:100dvh}
+.prez{display:none}
+.tel{position:relative;height:100dvh;max-width:480px;margin:0 auto;background:var(--fond);overflow:hidden;display:flex;flex-direction:column}
+.cap{flex:none;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:calc(env(safe-area-inset-top) + 12px) 16px 10px;border-bottom:1px solid var(--linie);background:var(--fond);z-index:3}
+.cap small{display:block;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--aur);font-weight:600}
+.cap b{font-size:15px;font-weight:600}
+.schimba{min-height:38px;padding:0 12px;border:1px solid var(--linie);border-radius:99px;font-size:13px;white-space:nowrap}
+#ecran{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
+#ecran::-webkit-scrollbar,.rola::-webkit-scrollbar,.grila::-webkit-scrollbar{display:none}
+.pad{padding:18px 16px 26px;display:grid;gap:16px;min-width:0}
+.tabs{flex:none;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;height:calc(var(--tab) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);border-top:1px solid var(--linie);background:rgba(18,19,22,.96)}
+.tabs button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11.5px;color:var(--stins)}
+.tabs svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.tabs button[aria-current=page]{color:var(--aur)}
+/* Start */
+.start{position:relative;min-height:100%;display:flex;flex-direction:column;justify-content:flex-end;padding:0 16px calc(env(safe-area-inset-bottom) + 18px);overflow:hidden}
+.start>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:zoom 16s ease-out both}
+@keyframes zoom{from{transform:scale(1.07)}to{transform:scale(1)}}
+.start::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,19,22,.25) 0,rgba(18,19,22,.1) 26%,rgba(18,19,22,.9) 55%,var(--fond) 78%)}
+.start>div{position:relative;z-index:1;display:grid;gap:12px}
+.start h1{font-size:clamp(42px,12vw,54px);line-height:1}
+.start p{font-size:15.5px;line-height:1.45;color:#DEDBD5;max-width:38ch}
+.roluri{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.roluri button{min-height:78px;padding:12px;text-align:left;background:rgba(39,42,49,.86);border:1px solid var(--linie);border-radius:10px;display:grid;gap:3px;align-content:center}
+.roluri b{font-size:15.5px;font-weight:600}
+.roluri span{font-size:12.5px;line-height:1.3;color:var(--stins)}
+.eticheta{font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--aur)}
+.demo{font-size:11.5px;color:var(--stins);text-align:center}
+/* Componente */
+h2{font-size:32px;line-height:1.05}
+h3{font-size:24px;line-height:1.1}
+.sub{font-size:14.5px;line-height:1.45;color:var(--stins)}
+.foto{position:relative;height:238px;overflow:hidden}
+.foto img{width:100%;height:100%;object-fit:cover;display:block}
+.foto::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 42%,var(--fond))}
+.foto div{position:absolute;z-index:1;left:16px;right:16px;bottom:10px;display:grid;gap:4px}
+.card{background:var(--panou);border:1px solid var(--linie);border-radius:12px;padding:14px;display:grid;gap:12px;min-width:0}
+.rand{display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:0}
+.rand>div{min-width:0}
+.titlu{font-size:15.5px;font-weight:600;line-height:1.3}
+.mic{font-size:13px;line-height:1.4;color:var(--stins)}
+.doua{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.val b{display:block;font-size:17px;font-weight:600;font-variant-numeric:tabular-nums}
+.val span{font-size:12.5px;color:var(--stins)}
+.btn{min-height:48px;padding:0 16px;border-radius:10px;font-weight:600;font-size:15px;background:var(--aur);color:var(--aur-text);width:100%}
+.btn.al{background:transparent;color:var(--text);border:1px solid var(--linie)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.mini{min-height:38px;padding:0 12px;border-radius:8px;font-size:13.5px;font-weight:600;background:var(--panou2);white-space:nowrap}
+.mini.ok{background:var(--aur);color:var(--aur-text)}
+.st{display:inline-block;font-size:12px;font-weight:600;white-space:nowrap}
+.st.v{color:var(--verde)}.st.r{color:var(--rosu)}.st.a{color:var(--aur)}.st.g{color:var(--stins)}
+.lista{display:grid}
+.lista>*{padding:13px 0;border-bottom:1px solid var(--linie)}
+.lista>*:first-child{padding-top:0}.lista>*:last-child{border-bottom:0;padding-bottom:0}
+.kpi{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi>div{background:var(--panou);border:1px solid var(--linie);border-radius:12px;padding:13px}
+.kpi b{display:block;font-family:var(--titlu);font-size:37px;font-weight:600;line-height:1;font-variant-numeric:lining-nums tabular-nums}
+.kpi span{display:block;margin-top:5px;font-size:13px;color:var(--stins)}
+.cod{font-size:36px;font-weight:700;letter-spacing:.18em;color:var(--aur);font-variant-numeric:tabular-nums}
+/* Galerie */
+.rola{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 -16px;padding:0 16px;scroll-padding:0 16px}
+.rola img{flex:0 0 84%;height:280px;object-fit:cover;border-radius:10px;scroll-snap-align:start;display:block;min-width:0}
+.etich{display:flex;flex-wrap:wrap;gap:7px}
+.etich span{font-size:13px;padding:6px 10px;border:1px solid var(--linie);border-radius:99px}
+/* Calendar oaspete */
+.luna{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.luna i{font-style:normal;text-align:center;font-size:11.5px;color:var(--stins);padding-bottom:4px}
+.luna button,.luna u{min-height:42px;border-radius:7px;font-size:14px;display:flex;align-items:center;justify-content:center;text-decoration:none;font-variant-numeric:tabular-nums}
+.luna button{background:var(--panou2)}
+.luna u{color:#696B71}
+.luna u.ocupat{text-decoration:line-through}
+.luna button.sel{background:var(--aur);color:var(--aur-text);font-weight:700}
+.luna button.int{background:rgba(221,169,69,.28)}
+/* Pași */
+.pasi{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.pasi i{height:4px;border-radius:9px;background:var(--panou2)}
+.pasi i.g{background:var(--aur)}
+.camp{display:grid;gap:4px}
+.camp label{font-size:12.5px;color:var(--stins)}
+.camp div{min-height:44px;display:flex;align-items:center;padding:0 12px;background:var(--panou2);border-radius:8px;font-size:15px}
+.act{height:150px;border:1px dashed rgba(242,239,233,.32);border-radius:10px;display:grid;place-items:center;text-align:center;gap:4px;padding:14px;width:100%}
+.act.gata{border:1px solid var(--verde);color:var(--verde)}
+.bif{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;text-align:left;font-size:14.5px;line-height:1.35}
+.bif i{flex:none;width:24px;height:24px;border-radius:7px;border:1.5px solid rgba(242,239,233,.42);display:grid;place-items:center;font-style:normal;font-size:15px;font-weight:700;color:var(--aur-text)}
+.bif.da i{background:var(--aur);border-color:var(--aur)}
+/* Servicii */
+.serv{display:grid;grid-template-columns:86px 1fr;gap:12px;align-items:center}
+.serv img{width:86px;height:86px;object-fit:cover;border-radius:9px;display:block}
+.serv>div{display:grid;gap:6px;min-width:0}
+/* Calendar administrator */
+.grila{overflow-x:auto;margin:0 -16px;padding:0 16px;scrollbar-width:none}
+.gr{display:grid;grid-template-columns:96px repeat(14,44px);width:max-content;row-gap:5px}
+.gr .zi{font-size:11px;line-height:1.2;text-align:center;color:var(--stins);padding-bottom:6px}
+.gr .zi b{display:block;font-size:14px;color:var(--text);font-variant-numeric:tabular-nums}
+.gr .zi.azi b{color:var(--aur)}
+.gr .ap{position:sticky;left:-16px;z-index:2;display:flex;align-items:center;min-height:44px;padding:0 8px 0 16px;margin-left:-16px;width:112px;background:var(--fond);font-size:12.5px;font-weight:600;line-height:1.2}
+.linia{grid-column:2 / -1;display:grid;grid-template-columns:repeat(14,44px);min-height:44px;background:repeating-linear-gradient(90deg,var(--panou) 0 43px,var(--fond) 43px 44px);border-radius:6px}
+.bara{height:34px;align-self:center;margin:0 2px;border-radius:6px;display:flex;align-items:center;gap:5px;padding:0 6px;font-size:12px;font-weight:600;color:#14151A;overflow:hidden;white-space:nowrap}
+.bara.Booking{background:var(--booking)}.bara.Airbnb{background:var(--airbnb)}.bara.Direct{background:var(--aur)}.bara.Blocat{background:var(--blocat)}
+.bara.cerere{background:transparent;color:var(--aur);border:1.5px dashed var(--aur)}
+.leg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--stins)}
+.leg i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.sync{display:grid;gap:7px}
+/* Bani */
+.barvenit{display:grid;gap:5px}
+.barvenit div{height:9px;background:var(--panou2);border-radius:9px;overflow:hidden}
+.barvenit i{display:block;height:100%;border-radius:9px}
+.pret{display:flex;align-items:center;gap:10px}
+.pret button{width:44px;height:44px;border-radius:9px;background:var(--panou2);font-size:20px}
+.pret b{font-size:22px;min-width:70px;text-align:center;font-variant-numeric:tabular-nums}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chips button{min-height:40px;padding:0 12px;border-radius:99px;border:1px solid var(--linie);font-size:13.5px}
+.chips button[aria-pressed=true]{background:var(--aur);border-color:var(--aur);color:var(--aur-text);font-weight:600}
+.inapoi{justify-self:start;min-height:38px;font-size:14px;color:var(--stins)}
+#anunt{position:absolute;z-index:9;left:14px;right:14px;bottom:calc(var(--tab) + env(safe-area-inset-bottom) + 10px);padding:12px 14px;border-radius:10px;background:#F2EFE9;color:#17181C;font-size:14px;font-weight:600;line-height:1.3;box-shadow:0 8px 24px rgba(0,0,0,.4);opacity:0;transform:translateY(8px);transition:.2s;pointer-events:none}
+#anunt.vaz{opacity:1;transform:none}
+/* Meniul Mai mult și rândurile apăsabile */
+.tabs button{position:relative}
+.bulina{position:absolute;top:7px;left:calc(50% + 7px);min-width:18px;height:18px;padding:0 5px;border-radius:99px;background:var(--aur);color:var(--aur-text);font-size:11px;font-weight:700;display:grid;place-items:center}
+.hub{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hub button{min-height:84px;padding:12px;text-align:left;background:var(--panou);border:1px solid var(--linie);border-radius:11px;display:grid;gap:3px;align-content:center}
+.hub b{font-size:15px;font-weight:600}
+.hub span{font-size:12.5px;line-height:1.3;color:var(--stins)}
+.grup{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--stins);margin-bottom:-6px}
+.linkr{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:left;min-height:52px}
+.linkr>div{min-width:0}
+.linkr>em{font-style:normal;color:var(--stins);font-size:20px}
+.butoane{display:flex;flex-wrap:wrap;gap:7px}
+.comut{flex:none;width:48px;height:30px;border-radius:99px;background:var(--panou2);border:1px solid var(--linie);position:relative;transition:background .15s}
+.comut i{position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--stins);transition:transform .15s}
+.comut.on{background:var(--aur);border-color:var(--aur)}
+.comut.on i{transform:translateX(18px);background:var(--aur-text)}
+.fotoap{height:170px;width:100%;object-fit:cover;border-radius:10px;display:block}
+/* Chat */
+.chat{display:flex;flex-direction:column;min-height:100%}
+.chat-cap{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px;border-bottom:1px solid var(--linie);position:sticky;top:0;background:var(--fond);z-index:2}
+.chat-cap>div{min-width:0}
+.bule{flex:1;display:flex;flex-direction:column;gap:7px;padding:14px 16px}
+.bula{max-width:82%;padding:9px 12px;border-radius:13px;background:var(--panou2);font-size:15px;line-height:1.35;align-self:flex-start;overflow-wrap:anywhere}
+.bula.eu{align-self:flex-end;background:var(--aur);color:var(--aur-text)}
+.bula small{display:block;margin-top:3px;font-size:11px;opacity:.72}
+.rapid{display:flex;gap:7px;overflow-x:auto;padding:0 16px 8px;scrollbar-width:none}
+.rapid::-webkit-scrollbar{display:none}
+.rapid button{flex:none;min-height:36px;padding:0 11px;border:1px solid var(--linie);border-radius:99px;font-size:13px}
+.scrie{position:sticky;bottom:0;display:flex;gap:8px;padding:8px 16px 10px;background:var(--fond);border-top:1px solid var(--linie)}
+.scrie input{flex:1;min-width:0;min-height:44px;padding:0 13px;border-radius:99px;border:1px solid var(--linie);background:var(--panou);color:var(--text);font:inherit;font-size:16px}
+.scrie input:focus-visible{outline:2px solid var(--aur);outline-offset:1px}
+.scrie button{flex:none;min-height:44px;padding:0 15px;border-radius:99px;background:var(--aur);color:var(--aur-text);font-weight:600;font-size:14.5px}
+/* Apel */
+#apel{position:absolute;inset:0;z-index:12;background:#0E0F12;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center}
+#apel .av{width:92px;height:92px;border-radius:50%;background:var(--panou2);display:grid;place-items:center;font-family:var(--titlu);font-size:44px;color:var(--aur)}
+#apel h2{font-size:38px}
+#apel button{margin-top:26px;min-height:52px;padding:0 30px;border-radius:99px;background:#D9534F;color:#fff;font-weight:600}
+/* Pe calculator: telefonul stă lângă o explicație scurtă */
+@media (min-width:920px){
+  body{background:#0B0C0E}
+  .scena{display:grid;grid-template-columns:minmax(330px,460px) 410px;gap:72px;align-items:center;justify-content:center;padding:24px}
+  .prez{display:grid;gap:18px}
+  .prez h1{font-size:54px;line-height:1}
+  .prez>p{font-size:17px;line-height:1.5;color:#CFCCC6}
+  .prez ol{padding-left:20px;display:grid;gap:9px;font-size:15px;line-height:1.4;color:#CFCCC6}
+  .prez .roluri button{background:var(--panou);min-height:66px}
+  .prez .roluri button[aria-pressed=true]{border-color:var(--aur)}
+  .tel{height:min(844px,calc(100dvh - 48px));width:410px;max-width:none;margin:0;border-radius:36px;border:9px solid #24262C;box-shadow:0 30px 80px rgba(0,0,0,.55)}
+  .cap{padding-top:16px}
+  .tabs{height:var(--tab);padding-bottom:0}
+  #anunt{bottom:calc(var(--tab) + 10px)}
+}
+@media (prefers-reduced-motion:reduce){.start>img{animation:none}#anunt{transition:none}}
+</style>
+</head>
+<body>
+<div class="scena">
+  <aside class="prez">
+    <div class="eticheta">Demo interactiv</div>
+    <h1>Un <span style="white-space:nowrap">apart-hotel</span>, <span style="white-space:nowrap">într-o</span> singură aplicație</h1>
+    <p>Apasă pe telefon ca într-o aplicație adevărată. Ce faci într-un rol se vede în celelalte.</p>
+    <div class="roluri" id="roluriPrez"></div>
+    <ol>
+      <li>Ca oaspete, trimite o cerere de rezervare.</li>
+      <li>Scrie-i un mesaj administratorului din tabul Mesaje.</li>
+      <li>Ca administrator, confirmă cererea și răspunde în chat.</li>
+      <li>Sună sau trimite o sarcină femeii de serviciu, din Mai mult.</li>
+      <li>La curățenie, termină apartamentul și urmărește statusul.</li>
+    </ol>
+    <p class="mic">Pozele sunt reale. Numele, sumele și celelalte apartamente sunt exemple.</p>
+  </aside>
+  <div class="tel">
+    <header class="cap" id="cap" hidden></header>
+    <main id="ecran"></main>
+    <nav class="tabs" id="tabs" hidden aria-label="Meniu"></nav>
+    <div id="apel" hidden></div>
+    <div id="anunt" role="status" aria-live="polite"></div>
+  </div>
+</div>
+<script>
+'use strict';
+const ROLURI = {
+  oaspete:{nume:'Oaspete',info:'Rezervă, check-in, chat',tabs:[['sejur','Sejurul meu','casa'],['rezerva','Rezervă','cal'],['servicii','Servicii','stea'],['chat','Mesaje','mesaj']]},
+  admin:{nume:'Administrator',info:'Tot complexul, de pe telefon',tabs:[['azi','Azi','casa'],['calendar','Calendar','cal'],['rezervari','Rezervări','lista'],['mesaje','Mesaje','mesaj'],['mai','Mai mult','mai']]},
+  proprietar:{nume:'Proprietar',info:'Venituri și calendar',tabs:[['apart','Apartament','casa'],['bani','Venituri','bani']]},
+  curatenie:{nume:'Curățenie',info:'Sarcini, defecte, chat',tabs:[['sarcini','Sarcini','lista'],['defect','Defect','unealta'],['chat','Mesaje','mesaj']]}
+};
+const ECHIPA = [{k:'maria',n:'Maria',rol:'Curățenie'},{k:'ioana',n:'Ioana',rol:'Curățenie'},{k:'vasile',n:'Vasile',rol:'Tehnician'}];
+const RASPUNSURI = {
+  oaspete:[['Check-in mai devreme','Da, apartamentul este gata de la ora 13:00.'],['Cod de acces','Codul de la ușă apare în aplicație după check-in-ul online.'],['Parcare','Parcarea este în curtea complexului, cu locurile marcate.'],['Wi-Fi','Rețeaua este GF-Oaspeti, iar parola este pe cardul din apartament.']],
+  echipa:[['Prioritar','Te rog să faci acest apartament primul, oaspeții sosesc mai devreme.'],['Poză','Trimite-mi te rog o poză când termini.'],['Mulțumesc','Mulțumesc mult!']]
+};
+const ICON = {
+  casa:'<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/>',
+  cal:'<rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+  stea:'<path d="m12 3.5 2.6 5.4 5.9.8-4.3 4.1 1 5.9-5.2-2.8-5.2 2.8 1-5.9-4.3-4.1 5.9-.8z"/>',
+  lista:'<path d="M8.5 6.5h12M8.5 12h12M8.5 17.5h12"/><path d="m3.5 6.5 1 1 1.5-2M3.5 12l1 1 1.5-2M3.5 17.5l1 1 1.5-2"/>',
+  echipa:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.5-4 3-6 6.5-6s6 2 6.5 6"/><path d="M16 4.8a3.5 3.5 0 0 1 0 6.4M18 14.4c2 .8 3.2 2.7 3.5 5.6"/>',
+  bani:'<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6.5 9.5v5M17.5 9.5v5"/>',
+  unealta:'<path d="M14.5 6.5a4.2 4.2 0 0 1 5.3-1.1l-2.9 2.9 1.8 1.8 2.9-2.9a4.2 4.2 0 0 1-5.6 5.5L8.2 20.5a2 2 0 0 1-2.8-2.8l7.8-7.8a4.2 4.2 0 0 1 1.3-3.4z"/>',
+  mesaj:'<path d="M4 5.5h16a1 1 0 0 1 1 1V16a1 1 0 0 1-1 1H9.5L5 20.5V17H4a1 1 0 0 1-1-1V6.5a1 1 0 0 1 1-1z"/>',
+  mai:'<rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/>'
+};
+const POZE_AP = [['cozy','Living cu canapea și perete pictat cu păpădie'],['papadie','Păpădie sub clopot de sticlă'],['dormitor','Dormitor cu draperii galbene'],['baie','Baie cu duș walk-in'],['bucatarie','Bucătărie utilată'],['munte','Vedere la munte din balcon']];
+const CURATARE = ['Lenjerie și prosoape schimbate','Baie dezinfectată','Bucătărie și frigider verificate','Aspirat și șters pe jos','Consumabile completate','Poză finală a apartamentului'];
+const APARTAMENTE = ['Studio Dandelion','Studio Brad','Ap. Cota 1400','Ap. Peleș','Studio Bucegi','Ap. Furnica'];
+const CURATENIE = 100;
+
+function stareInitiala(){return {
+  rol:null,tab:null,sel:[null,null],checkin:false,pas:1,actFoto:false,reguli:false,
+  sub:null,fir:null,propDesc:null,apel:null,ciorna:'',filtru:'oaspeti',nouAp:'Studio Dandelion',nouPers:'Maria',syncProaspat:false,reminder:false,
+  fire:{
+    ana:{nume:'Ana Marinescu',info:'Studio Dandelion · aplicație',tip:'oaspeti',necitit:1,necititEi:0,m:[{de:'ei',t:'Bună! Putem ajunge mai devreme, pe la 13:00?'}]},
+    radu:{nume:'Radu Ionescu',info:'Studio Brad · Booking',tip:'oaspeti',necitit:1,necititEi:0,m:[{de:'ei',t:'Unde parchez când ajung?'}]},
+    elena:{nume:'Elena Dumitru',info:'Ap. Cota 1400 · Airbnb',tip:'oaspeti',necitit:0,necititEi:0,m:[{de:'ei',t:'Mulțumim, a fost totul perfect ultima dată!'},{de:'admin',t:'Ne bucurăm! Vă așteptăm cu drag.'}]},
+    maria:{nume:'Maria',info:'Curățenie',tip:'echipa',necitit:0,necititEi:0,m:[{de:'ei',t:'Am ajuns la Ap. Peleș.'}]},
+    ioana:{nume:'Ioana',info:'Curățenie',tip:'echipa',necitit:0,necititEi:0,m:[{de:'ei',t:'Ap. Furnica este gata.'}]},
+    vasile:{nume:'Vasile',info:'Tehnician',tip:'echipa',necitit:0,necititEi:0,m:[{de:'admin',t:'Poți trece azi pe la Ap. Furnica?'}]}
+  },
+  prop:[
+    {nume:'Studio Dandelion',pret:350,minim:2,cod:'4827',activ:true,proprietar:'M. Georgescu',cap:'2+2'},
+    {nume:'Studio Brad',pret:320,minim:2,cod:'1936',activ:true,proprietar:'A. Vlad',cap:'2'},
+    {nume:'Ap. Cota 1400',pret:420,minim:2,cod:'7051',activ:true,proprietar:'C. Rusu',cap:'4'},
+    {nume:'Ap. Peleș',pret:450,minim:2,cod:'2648',activ:true,proprietar:'D. Marin',cap:'4'},
+    {nume:'Studio Bucegi',pret:340,minim:1,cod:'5382',activ:true,proprietar:'A. Vlad',cap:'2'},
+    {nume:'Ap. Furnica',pret:390,minim:2,cod:'8174',activ:true,proprietar:'I. Toma',cap:'3'}
+  ],
+  stoc:[
+    {n:'Prosoape mari',are:42,min:30,unit:'buc'},{n:'Seturi de lenjerie',are:18,min:20,unit:'seturi'},{n:'Capsule de cafea',are:60,min:100,unit:'buc'},
+    {n:'Hârtie igienică',are:120,min:60,unit:'role'},{n:'Detergent',are:6,min:5,unit:'l'}
+  ],
+  reguliPret:[{n:'Weekend',d:'Vineri și sâmbătă, +15%',on:true},{n:'Sezon de iarnă',d:'15 decembrie - 15 martie, +25%',on:true},{n:'Ultimul moment',d:'Cu 3 zile înainte, dacă e liber, -10%',on:false},{n:'Sejur lung',d:'De la 5 nopți, -8%',on:false}],
+  facturi:[
+    {id:1,nume:'Radu Ionescu',ap:'Studio Brad',suma:760,platit:true,factura:true},
+    {id:2,nume:'Maria și Paul Stan',ap:'Ap. Peleș',suma:1420,platit:true,factura:false},
+    {id:3,nume:'Andrei Pop',ap:'Studio Bucegi',suma:820,platit:false,factura:false,link:false},
+    {id:4,nume:'Elena Dumitru',ap:'Ap. Cota 1400',suma:980,platit:false,factura:false,link:false}
+  ],
+  decont:[
+    {ap:'Studio Dandelion',pr:'M. Georgescu',venit:4320,trimis:false},{ap:'Studio Brad',pr:'A. Vlad',venit:6180,trimis:false},{ap:'Ap. Cota 1400',pr:'C. Rusu',venit:8240,trimis:true},
+    {ap:'Ap. Peleș',pr:'D. Marin',venit:9120,trimis:false},{ap:'Studio Bucegi',pr:'A. Vlad',venit:5400,trimis:false},{ap:'Ap. Furnica',pr:'I. Toma',venit:5200,trimis:false}
+  ],
+  recenzii:[
+    {id:1,nume:'Cristina',canal:'Booking',nota:'9,6',t:'Curat, liniștit și cu o vedere superbă.',rasp:false},
+    {id:2,nume:'Mihai',canal:'Airbnb',nota:'8,8',t:'Totul a fost bine, dar Wi-Fi-ul a mers mai greu seara.',rasp:false},
+    {id:3,nume:'Laura',canal:'Direct',nota:'10',t:'Check-in foarte simplu, am primit codul direct în aplicație.',rasp:true}
+  ],
+  automat:[
+    {n:'Confirmarea rezervării',d:'Imediat după confirmare',on:true},{n:'Instrucțiuni de sosire',d:'Cu o zi înainte de sosire',on:true},{n:'Codul de la ușă',d:'După check-in-ul online',on:true},
+    {n:'Sarcină de curățenie',d:'Automat, la fiecare plecare',on:true},{n:'Mesaj de bun venit',d:'În ziua sosirii, la ora 16:00',on:false},{n:'Cerere de recenzie',d:'A doua zi după plecare',on:true}
+  ],
+  sarcinaDeschisa:null,defectAp:'Studio Dandelion',defectTip:null,defectFoto:false,cereri:[],comandate:{},nextId:5,
+  rezervari:[
+    {id:1,nume:'Radu Ionescu',ap:'Studio Brad',d:0,n:2,canal:'Booking',st:'confirmata',total:760},
+    {id:2,nume:'Maria și Paul Stan',ap:'Ap. Peleș',d:0,n:3,canal:'Direct',st:'confirmata',total:1420},
+    {id:3,nume:'Elena Dumitru',ap:'Ap. Cota 1400',d:1,n:2,canal:'Airbnb',st:'confirmata',total:980},
+    {id:4,nume:'Andrei Pop',ap:'Studio Bucegi',d:2,n:2,canal:'Direct',st:'cerere',total:820}
+  ],
+  evenimente:[
+    {ap:'Studio Dandelion',d:3,n:3,canal:'Booking',t:'Booking'},{ap:'Studio Dandelion',d:8,n:2,canal:'Direct',t:'Ana M.'},{ap:'Studio Dandelion',d:11,n:2,canal:'Airbnb',t:'Airbnb'},
+    {ap:'Studio Brad',d:0,n:2,canal:'Booking',t:'R. Ionescu'},{ap:'Studio Brad',d:5,n:4,canal:'Direct',t:'Direct'},
+    {ap:'Ap. Cota 1400',d:1,n:2,canal:'Airbnb',t:'E. Dumitru'},{ap:'Ap. Cota 1400',d:6,n:3,canal:'Booking',t:'Booking'},
+    {ap:'Ap. Peleș',d:0,n:3,canal:'Direct',t:'M. Stan'},{ap:'Ap. Peleș',d:7,n:5,canal:'Booking',t:'Booking'},
+    {ap:'Studio Bucegi',d:4,n:2,canal:'Airbnb',t:'Airbnb'},{ap:'Studio Bucegi',d:9,n:3,canal:'Direct',t:'Direct'},
+    {ap:'Ap. Furnica',d:2,n:4,canal:'Booking',t:'Booking'},{ap:'Ap. Furnica',d:10,n:2,canal:'Airbnb',t:'Airbnb'}
+  ],
+  sarcini:[
+    {id:1,ap:'Studio Brad',ora:'14:00',urm:'Radu Ionescu, 15:00',pers:'Maria',bif:[]},
+    {id:2,ap:'Ap. Peleș',ora:'14:30',urm:'Maria și Paul Stan, 16:00',pers:'Maria',bif:[0,1,2]},
+    {id:3,ap:'Ap. Furnica',ora:'13:00',urm:'Fără sosire azi',pers:'Ioana',bif:CURATARE.map((_,i)=>i)}
+  ],
+  defecte:[{id:1,ap:'Ap. Furnica',tip:'Robinet care curge',de:'Ioana',st:'Nou',urgent:false},{id:2,ap:'Ap. Peleș',tip:'Bec ars în baie',de:'Maria',st:'În lucru',urgent:false}]
+}}
+let s = stareInitiala();
+
+// Datele se calculează față de ziua deschiderii, ca demo-ul să rămână mereu actual.
+function zi(n){const x=new Date();x.setHours(12,0,0,0);x.setDate(x.getDate()+n);return x}
+const scurt = n => zi(n).toLocaleDateString('ro-RO',{day:'numeric',month:'short'}).replace('.','');
+const lung = n => zi(n).toLocaleDateString('ro-RO',{weekday:'long',day:'numeric',month:'long'});
+const lei = v => v.toLocaleString('ro-RO')+' lei';
+const $ = id => document.getElementById(id);
+const ocupateDandelion = () => { const o=new Set(); s.evenimente.filter(e=>e.ap==='Studio Dandelion').forEach(e=>{for(let i=0;i<e.n;i++)o.add(e.d+i)}); return o };
+const sarcinaGata = t => t.bif.length===CURATARE.length;
+const esc = t => String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pretAp = () => s.prop[0].pret;
+const stocMic = () => s.stoc.filter(x=>x.are<x.min&&!x.comandat);
+const necitite = () => Object.values(s.fire).reduce((n,f)=>n+f.necitit,0);
+const antet = (t,sub) => `<button class="inapoi" data-a="inapoi">‹ Înapoi</button><div><h2>${t}</h2>${sub?`<div class="sub" style="margin-top:4px">${sub}</div>`:''}</div>`;
+const comut = (on,a,v,et) => `<button class="comut ${on?'on':''}" role="switch" aria-checked="${on}" aria-label="${et}" data-a="${a}" data-v="${v}"><i></i></button>`;
+function stareAp(ap){
+  const t=s.sarcini.find(x=>x.ap===ap), ev=s.evenimente.find(e=>e.ap===ap&&e.d<=0&&e.d+e.n>0);
+  if(t&&!sarcinaGata(t)) return ['De curățat','a'];
+  if(ev) return ev.canal==='Blocat'?['Blocat','g']:['Ocupat azi','v'];
+  return ['Liber','g'];
+}
+function blocheazaAp(ap){const oc=new Set();s.evenimente.filter(e=>e.ap===ap).forEach(e=>{for(let i=0;i<e.n;i++)oc.add(e.d+i)});let d=1;while(oc.has(d)||oc.has(d+1))d++;s.evenimente.push({ap,d,n:2,canal:'Blocat',t:'Blocat'});return d}
+function chatHtml(k,euAdmin){
+  const f=s.fire[k], tip=f.tip==='echipa'?'echipa':'oaspete';
+  return `<div class="chat"><div class="chat-cap">${euAdmin?`<button class="inapoi" data-a="inapoi" aria-label="Înapoi">‹</button>`:''}<div style="flex:1"><div class="titlu">${euAdmin?f.nume:(k==='ana'?'Recepție Green Future':'Administrator')}</div><div class="mic">${euAdmin?f.info:'Răspunde de obicei în câteva minute'}</div></div>${euAdmin&&f.tip==='echipa'?`<button class="mini" data-a="suna" data-v="${k}">Sună</button>`:''}</div>
+    <div class="bule">${f.m.map(x=>`<div class="bula ${(x.de==='admin')===euAdmin?'eu':''}">${esc(x.t)}${x.o?`<small>${x.o}</small>`:''}</div>`).join('')}</div>
+    ${euAdmin?`<div class="rapid">${RASPUNSURI[tip].map(([e,t])=>`<button data-a="rapid" data-v="${esc(t)}">${e}</button>`).join('')}</div>`:''}
+    <form class="scrie" id="formMesaj"><input id="mesaj" autocomplete="off" aria-label="Mesaj" placeholder="Scrie un mesaj" value="${esc(s.ciorna)}"><button type="submit">Trimite</button></form></div>`;
+}
+function trimiteMesaj(t){
+  t=t.trim(); if(!t) return;
+  const k=s.rol==='admin'?s.fir:(s.rol==='oaspete'?'ana':'maria'), f=s.fire[k], o=new Date().toLocaleTimeString('ro-RO',{hour:'2-digit',minute:'2-digit'});
+  f.m.push({de:s.rol==='admin'?'admin':'ei',t,o}); s.ciorna='';
+  if(s.rol==='admin'){f.necititEi++; if(k!=='ana'&&k!=='maria') setTimeout(()=>{f.m.push({de:'ei',t:'Mulțumesc, am înțeles!',o});if(s.rol==='admin'&&s.fir===k)desen(1,true);else{f.necitit++;desen(1)}},1800)}
+  else f.necitit++;
+  desen(1,true); const i=$('mesaj'); if(i) i.focus();
+}
+function anunt(m){const a=$('anunt');a.textContent=m;a.classList.add('vaz');clearTimeout(anunt.t);anunt.t=setTimeout(()=>a.classList.remove('vaz'),2800)}
+
+const V = {
+  start(){return `<section class="start"><img src="poze/piscina.jpg" alt="Piscină interioară cu vedere la munte"><div>
+    <div class="eticheta">Demo interactiv</div><h1>Un <span style="white-space:nowrap">apart-hotel</span>, într-o singură aplicație</h1>
+    <p>Alege un rol și apasă ca într-o aplicație adevărată. Ce faci într-un rol se vede în celelalte.</p>
+    <div class="roluri">${butoaneRol()}</div>
+    <p class="demo">Pozele sunt reale. Numele și sumele sunt exemple.</p></div></section>`},
+
+  /* ---------- Oaspete ---------- */
+  sejur(){
+    if(s.pas>0 && s.incheckin) return V.fluxCheckin();
+    return `<div class="foto"><img src="poze/living.jpg" alt="Studio Dandelion, living și dormitor"><div><div class="eticheta">Bine ai venit, Ana</div><h2>Studio Dandelion</h2></div></div>
+    <div class="pad">
+      <div class="card"><div class="doua">
+        <div class="val"><b>${scurt(8)}, 15:00</b><span>Sosire</span></div><div class="val"><b>${scurt(10)}, 11:00</b><span>Plecare</span></div></div>
+        <div class="mic">2 adulți · cod rezervare GF-4827 · confirmată</div></div>
+      ${s.checkin?`<div class="card"><div class="rand"><div class="titlu">Cod ușă</div><span class="st v">Check-in făcut</span></div>
+        <div class="cod">${s.prop[0].cod.split('').join(' ')}</div><div class="mic">Funcționează din ${scurt(8)}, ora 15:00, până la plecare.</div>
+        <div class="doua"><div class="val"><b>Etajul 3</b><span>Studio 307</span></div><div class="val"><b>GF-Oaspeti</b><span>Rețea Wi-Fi</span></div></div></div>`
+      :`<div class="card"><div class="titlu">Evită recepția: fă check-in online</div><div class="sub">Durează două minute. Primești codul de la ușă în aplicație.</div>
+        <button class="btn" data-a="porneste-checkin">Începe check-in-ul</button></div>`}
+      <div class="card"><div class="titlu">În jur</div><div class="lista">
+        <div class="rand"><div>Castelul Peleș</div><span class="mic">în Sinaia</span></div>
+        <div class="rand"><div>Telecabina Cota 1400</div><span class="mic">în Sinaia</span></div>
+      </div></div></div>`},
+  fluxCheckin(){
+    const p=s.pas; let corp='';
+    if(p===1) corp=`<h3>Datele oaspetelui</h3><div class="camp"><label>Nume</label><div>Ana Marinescu</div></div><div class="camp"><label>Telefon</label><div>07•• ••• 482</div></div><div class="camp"><label>Persoane</label><div>2 adulți</div></div><button class="btn" data-a="pas" data-v="2">Continuă</button>`;
+    if(p===2) corp=`<h3>Actul de identitate</h3><p class="sub">Fotografia ajunge doar la administrator, pentru fișa de anunțare a sosirii.</p>
+      <button class="act ${s.actFoto?'gata':''}" data-a="foto-act"><span>${s.actFoto?'✓ Act fotografiat<br><small>Simulare, nu se folosește camera</small>':'Apasă pentru a fotografia actul<br><small>Simulare, nu se folosește camera</small>'}</span></button>
+      <button class="btn" data-a="pas" data-v="3" ${s.actFoto?'':'disabled'}>Continuă</button>`;
+    if(p===3) corp=`<h3>Regulile casei</h3><div class="sub">Liniște după ora 22:00. Fumatul este interzis în apartament. Plecarea este până la ora 11:00.</div>
+      <button class="bif ${s.reguli?'da':''}" data-a="reguli" aria-pressed="${s.reguli}"><i>${s.reguli?'✓':''}</i>Am citit și accept regulile</button>
+      <button class="btn" data-a="termina-checkin" ${s.reguli?'':'disabled'}>Finalizează check-in-ul</button>`;
+    return `<div class="pad"><button class="inapoi" data-a="iesi-checkin">‹ Sejurul meu</button><div class="pasi">${[1,2,3].map(i=>`<i class="${i<=p?'g':''}"></i>`).join('')}</div><div class="mic">Pasul ${p} din 3</div>${corp}</div>`},
+  rezerva(){
+    const prima=-((zi(0).getDay()+6)%7), oc=ocupateDandelion(), [a,b]=s.sel; let cel='';
+    for(let i=prima;i<prima+35;i++){
+      const nr=zi(i).getDate();
+      if(i<0) cel+=`<u>${nr}</u>`;
+      else if(oc.has(i)) cel+=`<u class="ocupat" aria-label="${scurt(i)}, ocupat">${nr}</u>`;
+      else { const sel=i===a||i===b, inter=a!==null&&b!==null&&i>a&&i<b; cel+=`<button class="${sel?'sel':inter?'int':''}" data-a="zi" data-v="${i}" aria-label="${scurt(i)}" aria-pressed="${sel}">${nr}</button>` }
+    }
+    const nopti=a!==null&&b!==null?b-a:0, sub=nopti*pretAp(), total=sub+CURATENIE;
+    return `<div class="pad">
+      <div><div class="eticheta">Rezervare directă, fără comision</div><h2 style="margin-top:6px">Studio Dandelion</h2></div>
+      <div class="rola" tabindex="0" aria-label="Galerie foto">${POZE_AP.map(([n,t])=>`<img src="poze/${n}.jpg" alt="${t}" loading="lazy">`).join('')}</div>
+      <div class="etich"><span>2+2 persoane</span><span>Vedere la munte</span><span>Bucătărie</span><span>Wi-Fi</span></div>
+      <div class="card"><div class="titlu">Alege datele</div><div class="luna">${['L','M','M','J','V','S','D'].map(x=>`<i>${x}</i>`).join('')}${cel}</div>
+      <div class="mic">Zilele tăiate sunt ocupate, inclusiv de pe Booking și Airbnb. Minimum 2 nopți.</div></div>
+      ${!s.prop[0].activ?`<div class="card"><div class="titlu">Momentan nu primim rezervări</div><div class="sub">Administratorul a oprit rezervările pentru acest apartament.</div></div>`:nopti?`<div class="card"><div class="rand"><span>${nopti} nopți × ${lei(pretAp())}</span><span>${lei(sub)}</span></div><div class="rand"><span>Curățenie</span><span>${lei(CURATENIE)}</span></div><div class="rand titlu"><span>Total</span><span>${lei(total)}</span></div>
+      <button class="btn" data-a="rezerva">Trimite cererea</button></div>`:`<div class="mic" style="text-align:center">Apasă pe ziua sosirii, apoi pe ziua plecării.</div>`}
+    </div>`},
+  servicii(){
+    const w=[['piscina','Piscină interioară','Contra cost, 10:00 - 20:00'],['jacuzzi','Jacuzzi cu vedere la munte','Contra cost, cu programare'],['sauna','Saună finlandeză','Contra cost, cu programare'],['sala','Sală de fitness','Contra cost, 08:00 - 22:00']];
+    const e=[['mic dejun','Mic dejun la apartament','65 lei/persoană'],['prosoape','Prosoape suplimentare','Gratuit'],['late','Plecare mai târziu, ora 13:00','80 lei']];
+    return `<div class="pad"><div><div class="eticheta">Pe nota apartamentului</div><h2 style="margin-top:6px">Servicii</h2></div>
+    <div class="card"><div class="titlu">Wellness</div><div class="lista">${w.map(([k,t,d])=>`<div class="serv"><img src="poze/${k}.jpg" alt="${t}" loading="lazy"><div><div class="titlu">${t}</div><div class="mic">${d}</div>${btnCerere(k,t,'Programează')}</div></div>`).join('')}</div></div>
+    <div class="card"><div class="titlu">La apartament</div><div class="lista">${e.map(([k,t,d])=>`<div class="rand"><div><div>${t}</div><div class="mic">${d}</div></div>${btnCerere(k,t,'Cere')}</div>`).join('')}</div></div></div>`},
+
+  /* ---------- Administrator ---------- */
+  azi(){
+    const sosiri=s.rezervari.filter(r=>r.d===0&&r.st==='confirmata');
+    const decurat=s.sarcini.filter(t=>!sarcinaGata(t)).length, cereri=s.rezervari.filter(r=>r.st==='cerere').length, msg=necitite(), defecte=s.defecte.filter(d=>d.st==='Nou').length, stoc=stocMic().length, neplatite=s.facturi.filter(f=>!f.platit).length;
+    const atentie=[
+      [cereri,cereri===1?'cerere de rezervare':'cereri de rezervare','Așteaptă confirmarea ta','rezervari'],
+      [msg,msg===1?'mesaj necitit':'mesaje necitite','Oaspeți și echipă','mesaje'],
+      [defecte,defecte===1?'defect nou':'defecte noi','Trimite tehnicianul','mentenanta'],
+      [stoc,stoc===1?'produs aproape terminat':'produse aproape terminate','Comandă din stocuri','stocuri'],
+      [neplatite,neplatite===1?'rezervare neplătită':'rezervări neplătite','Trimite linkul de plată','incasari']
+    ].filter(x=>x[0]);
+    return `<div class="pad"><div><div class="mic">${lung(0).charAt(0).toUpperCase()+lung(0).slice(1)}</div><h2 style="margin-top:4px">Azi în complex</h2></div>
+    <div class="kpi"><div><b>${sosiri.length}</b><span>sosiri</span></div><div><b>78%</b><span>ocupare în această lună</span></div><div><b>${decurat}</b><span>apartamente de curățat</span></div><div><b>38.460</b><span>lei venit în această lună</span></div></div>
+    ${atentie.length?`<div class="card"><div class="titlu">Necesită atenție</div><div class="lista">${atentie.map(([n,t,d,v])=>`<button class="linkr" data-a="mergi" data-v="${v}"><div><div>${n} ${t}</div><div class="mic">${d}</div></div><em>›</em></button>`).join('')}</div></div>`:''}
+    <div class="card"><div class="titlu">Sosiri de azi</div><div class="lista">${sosiri.map(r=>{const t=s.sarcini.find(x=>x.ap===r.ap),g=t&&sarcinaGata(t);return `<div class="rand"><div><div>${r.nume}</div><div class="mic">${r.ap} · ${r.canal}</div></div><span class="st ${g?'v':'a'}">${g?'Apartament gata':'Se curăță'}</span></div>`}).join('')}</div></div>
+    ${s.cereri.length?`<div class="card"><div class="titlu">Cereri de la oaspeți</div><div class="lista">${s.cereri.map(c=>`<div class="rand"><div><div>${c}</div><div class="mic">Ana M., Studio Dandelion</div></div><span class="st a">Nou</span></div>`).join('')}</div></div>`:''}</div>`},
+  mesaje(){
+    if(s.fir) return chatHtml(s.fir,true);
+    const fire=Object.entries(s.fire).filter(([,f])=>f.tip===s.filtru);
+    return `<div class="pad"><h2>Mesaje</h2><div class="sub" style="margin-top:-10px">Toate conversațiile, într-un singur loc.</div>
+    <div class="chips"><button data-a="filtru" data-v="oaspeti" aria-pressed="${s.filtru==='oaspeti'}">Oaspeți</button><button data-a="filtru" data-v="echipa" aria-pressed="${s.filtru==='echipa'}">Echipă</button></div>
+    <div class="card"><div class="lista">${fire.map(([k,f])=>`<button class="linkr" data-a="deschide-fir" data-v="${k}"><div><div class="titlu">${f.nume}</div><div class="mic">${f.info}</div><div class="mic" style="color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(f.m[f.m.length-1].t)}</div></div>${f.necitit?`<span class="st a">${f.necitit} nou</span>`:'<em>›</em>'}</button>`).join('')}</div></div></div>`},
+  chat(){const k=s.rol==='oaspete'?'ana':'maria';return chatHtml(k,false)},
+  mai(){
+    const G=[
+      ['Operațional',[['proprietati','Proprietăți','Apartamente, coduri, status'],['echipa','Echipă','Sună, scrie, dă sarcini'],['mentenanta','Mentenanță','Defecte și tehnician'],['stocuri','Stocuri','Lenjerii, consumabile']]],
+      ['Bani',[['preturi','Prețuri','Tarife și reguli'],['incasari','Încasări și facturi','Plăți, e-Factura'],['deconturi','Deconturi','Pentru proprietari'],['rapoarte','Rapoarte','Ocupare și venituri']]],
+      ['Oaspeți',[['oaspeti','Check-in și fișe','Sosiri și documente'],['recenzii','Recenzii','Citește și răspunde'],['automat','Mesaje automate','Trimise la timp'],['canale','Canale','Booking, Airbnb, site']]]
+    ];
+    return `<div class="pad"><h2>Administrare</h2>${G.map(([g,l])=>`<div class="grup">${g}</div><div class="hub">${l.map(([v,t,d])=>`<button data-a="sub" data-v="${v}"><b>${t}</b><span>${d}</span></button>`).join('')}</div>`).join('')}</div>`},
+  proprietati(){
+    if(s.propDesc!==null) return V.proprietate();
+    return `<div class="pad">${antet('Proprietăți',`${s.prop.length} apartamente administrate`)}<div class="card"><div class="lista">${s.prop.map((p,i)=>{const [t,c]=stareAp(p.nume);return `<button class="linkr" data-a="deschide-prop" data-v="${i}"><div><div class="titlu">${p.nume}</div><div class="mic">${lei(p.pret)}/noapte · ${p.cap} pers. · ${p.proprietar}</div></div><span class="st ${p.activ?c:'r'}">${p.activ?t:'Oprit'}</span></button>`}).join('')}</div></div>
+    <button class="btn al" data-a="adauga-prop">Adaugă un apartament</button></div>`},
+  proprietate(){
+    const i=s.propDesc,p=s.prop[i],[t,c]=stareAp(p.nume),urm=s.evenimente.filter(e=>e.ap===p.nume&&e.d+e.n>0).sort((a,b)=>a.d-b.d).slice(0,3);
+    return `<div class="pad">${antet(p.nume,`Proprietar: ${p.proprietar} · <span class="st ${c}">${t}</span>`)}
+    ${i===0?'<img class="fotoap" src="poze/cozy.jpg" alt="Living Studio Dandelion">':''}
+    <div class="card"><div class="titlu">Preț pe noapte</div><div class="pret"><button data-a="pret-ap" data-v="${i}:-10" aria-label="Scade prețul">−</button><b>${p.pret}</b><button data-a="pret-ap" data-v="${i}:10" aria-label="Crește prețul">+</button><span class="mic">lei · minimum ${p.minim} ${p.minim===1?'noapte':'nopți'}</span></div></div>
+    <div class="card"><div class="rand"><div><div class="titlu">Cod ușă</div><div class="cod" style="font-size:28px">${p.cod.split('').join(' ')}</div></div><button class="mini" data-a="cod-nou" data-v="${i}">Schimbă</button></div>
+    <div class="rand"><div><div class="titlu">Primește rezervări</div><div class="mic">Oprește vânzarea când lucrezi la apartament</div></div>${comut(p.activ,'activ',i,'Primește rezervări')}</div></div>
+    <div class="card"><div class="titlu">Urmează</div><div class="lista">${urm.length?urm.map(e=>`<div class="rand"><span>${scurt(e.d)} - ${scurt(e.d+e.n)}</span><span class="mic">${e.canal}</span></div>`).join(''):'<div class="mic">Nimic în calendar.</div>'}</div></div>
+    <div class="butoane"><button class="mini" data-a="cur-ap" data-v="${i}">Trimite curățenie</button><button class="mini" data-a="bloc-ap" data-v="${i}">Blochează 2 nopți</button></div></div>`},
+  calendar(){
+    let zile=''; for(let i=0;i<14;i++) zile+=`<div class="zi ${i===0?'azi':''}">${zi(i).toLocaleDateString('ro-RO',{weekday:'short'}).replace('.','').slice(0,2)}<b>${zi(i).getDate()}</b></div>`;
+    const randuri=APARTAMENTE.map(ap=>{
+      const b=s.evenimente.filter(e=>e.ap===ap&&e.d<14).map(e=>`<div class="bara ${e.canal} ${e.cerere?'cerere':''}" style="grid-column:${e.d+1} / span ${Math.min(e.n,14-e.d)};grid-row:1">${e.t}</div>`).join('');
+      return `<div class="ap">${ap}</div><div class="linia">${b}</div>`}).join('');
+    return `<div class="pad"><div><h2>Calendar</h2><div class="sub" style="margin-top:4px">Toate apartamentele și toate canalele. Glisează pentru următoarele zile.</div></div>
+    <div class="leg"><span><i style="background:var(--booking)"></i>Booking</span><span><i style="background:var(--airbnb)"></i>Airbnb</span><span><i style="background:var(--aur)"></i>Direct</span><span><i style="background:var(--blocat)"></i>Blocat</span></div>
+    <div class="grila" tabindex="0" aria-label="Calendar pe 14 zile"><div class="gr"><div></div>${zile}${randuri}</div></div></div>`},
+  rezervari(){
+    const ord=[...s.rezervari].sort((a,b)=>(a.st==='cerere'?0:1)-(b.st==='cerere'?0:1)||a.d-b.d);
+    return `<div class="pad"><h2>Rezervări</h2>${ord.map(r=>`<div class="card"><div class="rand"><div><div class="titlu">${r.nume}</div><div class="mic">${r.ap} · ${scurt(r.d)} - ${scurt(r.d+r.n)} · ${r.canal}</div></div><span class="st ${r.st==='cerere'?'a':r.st==='refuzata'?'r':'v'}">${r.st==='cerere'?'De confirmat':r.st==='refuzata'?'Refuzată':'Confirmată'}</span></div>
+      <div class="rand"><span class="titlu">${lei(r.total)}</span>${r.st==='cerere'?`<span style="display:flex;gap:7px"><button class="mini" data-a="refuza" data-v="${r.id}">Refuză</button><button class="mini ok" data-a="confirma" data-v="${r.id}">Confirmă</button></span>`:''}</div></div>`).join('')}</div>`},
+  echipa(){
+    const stareOm=o=>{ if(o.k==='vasile'){const n=s.defecte.filter(d=>d.st!=='Rezolvat').length;return n?`${n} ${n===1?'defect deschis':'defecte deschise'}`:'Disponibil'}
+      const l=s.sarcini.filter(t=>t.pers===o.n&&!sarcinaGata(t)); if(!l.length) return 'Disponibilă'; const c=l.find(t=>t.bif.length); return c?`În lucru la ${c.ap}`:`Urmează ${l[0].ap}`};
+    return `<div class="pad">${antet('Echipă','Sună, scrie sau dă o sarcină nouă.')}
+    <div class="card"><div class="lista">${ECHIPA.map(o=>`<div class="rand"><div><div class="titlu">${o.n}</div><div class="mic">${o.rol} · ${stareOm(o)}</div></div><span class="butoane" style="flex-wrap:nowrap"><button class="mini" data-a="suna" data-v="${o.k}">Sună</button><button class="mini" data-a="scrie-om" data-v="${o.k}">Scrie</button></span></div>`).join('')}</div></div>
+    <div class="card"><div class="titlu">Curățenie azi</div><div class="lista">${s.sarcini.map(t=>`<div class="rand"><div><div>${t.ap}</div><div class="mic">${t.pers} · până la ${t.ora} · ${t.bif.length}/${CURATARE.length} pași</div></div>${sarcinaGata(t)?'<span class="st v">Gata</span>':`<button class="mini" data-a="schimba-om" data-v="${t.id}">Dă-i ${t.pers==='Maria'?'Ioanei':'Mariei'}</button>`}</div>`).join('')}</div></div>
+    <div class="card"><div class="titlu">Sarcină nouă de curățenie</div><div class="chips">${APARTAMENTE.map(a=>`<button data-a="nou-ap" data-v="${a}" aria-pressed="${s.nouAp===a}">${a}</button>`).join('')}</div>
+    <div class="chips"><button data-a="nou-pers" data-v="Maria" aria-pressed="${s.nouPers==='Maria'}">Maria</button><button data-a="nou-pers" data-v="Ioana" aria-pressed="${s.nouPers==='Ioana'}">Ioana</button></div><button class="btn" data-a="sarcina-noua">Trimite sarcina</button></div></div>`},
+  mentenanta(){
+    const urm={'Nou':'Dă-i lui Vasile','În lucru':'Rezolvat'};
+    return `<div class="pad">${antet('Mentenanță','Defectele raportate de echipă și oaspeți.')}${s.defecte.map(d=>`<div class="card"><div class="rand"><div><div class="titlu">${esc(d.tip)}</div><div class="mic">${d.ap} · raportat de ${d.de}</div></div><span class="st ${d.st==='Nou'?'r':d.st==='Rezolvat'?'v':'a'}">${d.st}</span></div>${d.st==='Rezolvat'?'':`<div class="butoane"><button class="mini ok" data-a="defect-avans" data-v="${d.id}">${urm[d.st]}</button><button class="mini" data-a="suna" data-v="vasile">Sună tehnicianul</button></div>`}</div>`).join('')}</div>`},
+  stocuri(){
+    return `<div class="pad">${antet('Stocuri','Te anunțăm când un produs ajunge sub limită.')}<div class="card"><div class="lista">${s.stoc.map((x,i)=>{const mic=x.are<x.min;return `<div class="rand"><div><div>${x.n}</div><div class="mic">${x.are} ${x.unit} · limită ${x.min}</div></div>${x.comandat?'<span class="st v">Comandat</span>':mic?`<button class="mini ok" data-a="comanda" data-v="${i}">Comandă</button>`:'<span class="st g">Suficient</span>'}</div>`}).join('')}</div></div></div>`},
+  preturi(){
+    return `<div class="pad">${antet('Prețuri','Tarifele de bază și regulile lor.')}
+    <div class="card"><div class="titlu">Tarif pe noapte</div><div class="lista">${s.prop.map((p,i)=>`<div class="rand"><span>${p.nume}</span><span class="pret" style="gap:6px"><button style="width:38px;height:38px" data-a="pret-ap" data-v="${i}:-10" aria-label="Scade prețul pentru ${p.nume}">−</button><b style="font-size:15px;min-width:42px">${p.pret}</b><button style="width:38px;height:38px" data-a="pret-ap" data-v="${i}:10" aria-label="Crește prețul pentru ${p.nume}">+</button></span></div>`).join('')}</div></div>
+    <div class="card"><div class="titlu">Reguli automate</div><div class="lista">${s.reguliPret.map((r,i)=>`<div class="rand"><div><div>${r.n}</div><div class="mic">${r.d}</div></div>${comut(r.on,'regula',i,r.n)}</div>`).join('')}</div></div></div>`},
+  incasari(){
+    const inc=s.facturi.filter(f=>f.platit).reduce((n,f)=>n+f.suma,0), dei=s.facturi.filter(f=>!f.platit).reduce((n,f)=>n+f.suma,0);
+    return `<div class="pad">${antet('Încasări și facturi','Rezervările din această săptămână.')}<div class="kpi"><div><b>${inc.toLocaleString('ro-RO')}</b><span>lei încasați</span></div><div><b>${dei.toLocaleString('ro-RO')}</b><span>lei de încasat</span></div></div>
+    ${s.facturi.map(f=>`<div class="card"><div class="rand"><div><div class="titlu">${f.nume}</div><div class="mic">${f.ap} · ${lei(f.suma)}</div></div><span class="st ${f.platit?'v':'a'}">${f.platit?'Plătit':f.link?'Link trimis':'Neplătit'}</span></div>
+      <div class="butoane">${f.platit?'':f.link?`<button class="mini" data-a="plata-ok" data-v="${f.id}">Marchează plătit</button>`:`<button class="mini ok" data-a="link-plata" data-v="${f.id}">Trimite link de plată</button>`}${f.factura?'<span class="st v" style="align-self:center">Factură în e-Factura</span>':f.platit?`<button class="mini ok" data-a="factura" data-v="${f.id}">Emite factura</button>`:''}</div></div>`).join('')}</div>`},
+  deconturi(){
+    return `<div class="pad">${antet('Deconturi','Comision de administrare: 15%.')}${s.decont.map((d,i)=>{const c=Math.round(d.venit*.15);return `<div class="card"><div class="rand"><div><div class="titlu">${d.ap}</div><div class="mic">${d.pr}</div></div>${d.trimis?'<span class="st v">Trimis</span>':`<button class="mini ok" data-a="decont" data-v="${i}">Trimite</button>`}</div><div class="doua"><div class="val"><b>${lei(d.venit)}</b><span>venit</span></div><div class="val"><b>${lei(d.venit-c)}</b><span>de virat, după comision ${lei(c)}</span></div></div></div>`}).join('')}</div>`},
+  rapoarte(){
+    const ap=s.decont, max=Math.max(...ap.map(x=>x.venit)), can=[['Booking',47,'var(--booking)'],['Direct',31,'var(--aur)'],['Airbnb',22,'var(--airbnb)']];
+    return `<div class="pad">${antet('Rapoarte','Luna în curs, tot complexul.')}<div class="kpi"><div><b>78%</b><span>ocupare</span></div><div><b>38.460</b><span>lei venit</span></div><div><b>275</b><span>lei preț mediu pe noapte</span></div><div><b>214</b><span>lei pe noapte disponibilă</span></div></div>
+    <div class="card"><div class="titlu">Venit pe apartament</div>${ap.map(x=>`<div class="barvenit"><div class="rand" style="height:auto;background:none;overflow:visible"><span style="font-size:14px">${x.ap}</span><b style="font-size:14px;font-variant-numeric:tabular-nums">${lei(x.venit)}</b></div><div><i style="width:${x.venit/max*100}%;background:var(--aur)"></i></div></div>`).join('')}</div>
+    <div class="card"><div class="titlu">Rezervări pe canale</div>${can.map(([n,v,c])=>`<div class="barvenit"><div class="rand" style="height:auto;background:none;overflow:visible"><span style="font-size:14px">${n}</span><b style="font-size:14px">${v}%</b></div><div><i style="width:${v}%;background:${c}"></i></div></div>`).join('')}</div></div>`},
+  oaspeti(){
+    const l=[['Radu Ionescu','Studio Brad',0,true],['Maria și Paul Stan','Ap. Peleș',0,true],['Elena Dumitru','Ap. Cota 1400',1,false],['Ana Marinescu','Studio Dandelion',8,s.checkin]];
+    return `<div class="pad">${antet('Check-in și fișe','Datele oaspeților, adunate înainte de sosire.')}${l.map(([n,a,d,ok])=>`<div class="card"><div class="rand"><div><div class="titlu">${n}</div><div class="mic">${a} · sosire ${scurt(d)}</div></div><span class="st ${ok?'v':'a'}">${ok?'Check-in făcut':'În așteptare'}</span></div><div class="butoane">${ok?`<button class="mini" data-a="fisa">Vezi fișa de anunțare</button>`:n==='Elena Dumitru'&&s.reminder?'<span class="st v">Reamintire trimisă</span>':`<button class="mini ok" data-a="reaminteste" data-v="${n}">Trimite reamintire</button>`}</div></div>`).join('')}</div>`},
+  recenzii(){
+    return `<div class="pad">${antet('Recenzii','Toate canalele, într-un singur loc.')}<div class="kpi"><div><b>9,4</b><span>nota medie</span></div><div><b>${s.recenzii.filter(r=>!r.rasp).length}</b><span>fără răspuns</span></div></div>${s.recenzii.map(r=>`<div class="card"><div class="rand"><div class="titlu">${r.nume} · ${r.canal}</div><b>${r.nota}</b></div><div class="sub">${r.t}</div>${r.rasp?'<span class="st v">Ai răspuns</span>':`<button class="mini ok" style="justify-self:start" data-a="raspunde" data-v="${r.id}">Răspunde cu mulțumiri</button>`}</div>`).join('')}</div>`},
+  automat(){
+    return `<div class="pad">${antet('Mesaje automate','Pleacă singure, la momentul potrivit.')}<div class="card"><div class="lista">${s.automat.map((a,i)=>`<div class="rand"><div><div>${a.n}</div><div class="mic">${a.d}</div></div>${comut(a.on,'auto',i,a.n)}</div>`).join('')}</div></div></div>`},
+  canale(){
+    const t=s.syncProaspat?['acum câteva secunde','acum câteva secunde']:['acum 2 minute','acum 5 minute'];
+    return `<div class="pad">${antet('Canale','Disponibilitatea rămâne la fel peste tot.')}<div class="card"><div class="lista"><div class="rand"><div><div>Booking.com</div><div class="mic">${t[0]}</div></div><span class="st v">Conectat</span></div><div class="rand"><div><div>Airbnb</div><div class="mic">${t[1]}</div></div><span class="st v">Conectat</span></div><div class="rand"><div><div>Site propriu</div><div class="mic">în timp real</div></div><span class="st v">Conectat</span></div></div><button class="btn al" data-a="sync">Sincronizează acum</button></div>
+    <div class="card"><div class="titlu">Suprapuneri</div><div class="sub">Nicio rezervare suprapusă. Dacă apare una, primești imediat o alertă.</div></div></div>`},
+
+  /* ---------- Proprietar ---------- */
+  apart(){
+    const urm=s.evenimente.filter(e=>e.ap==='Studio Dandelion'&&e.canal!=='Blocat').sort((a,b)=>a.d-b.d).slice(0,3), bl=s.evenimente.find(e=>e.ap==='Studio Dandelion'&&e.canal==='Blocat');
+    return `<div class="foto"><img src="poze/cozy.jpg" alt="Living Studio Dandelion"><div><div class="eticheta">Apartamentul tău</div><h2>Studio Dandelion</h2></div></div>
+    <div class="pad"><div class="kpi"><div><b>4.320</b><span>lei venit în această lună</span></div><div><b>68%</b><span>ocupare</span></div></div>
+    <div class="card"><div class="titlu">Următorii oaspeți</div><div class="lista">${urm.map(e=>`<div class="rand"><div><div>${scurt(e.d)} - ${scurt(e.d+e.n)}</div><div class="mic">${e.n} nopți</div></div><span class="mic">${e.canal}</span></div>`).join('')}</div></div>
+    <div class="card"><div class="titlu">Ai nevoie de apartament?</div>${bl?`<div class="sub">Blocat pentru tine: ${scurt(bl.d)} - ${scurt(bl.d+bl.n)}. Datele apar ocupate pe toate canalele la următoarea sincronizare.</div><button class="btn al" data-a="deblocheaza">Eliberează datele</button>`:`<div class="sub">Blochezi datele pentru tine, iar oaspeții nu le mai pot rezerva.</div><button class="btn" data-a="blocheaza">Blochează următoarele 2 nopți libere</button>`}</div></div>`},
+  bani(){
+    const c=[['Rezervări directe',2100,'var(--aur)','fără comision'],['Booking.com',1540,'var(--booking)','după comision'],['Airbnb',680,'var(--airbnb)','după comision']];
+    return `<div class="pad"><div><div class="mic">Luna în curs</div><h2 style="margin-top:4px">4.320 lei</h2></div>
+    <div class="card"><div class="titlu">De unde vin banii</div>${c.map(([n,v,col,m])=>`<div class="barvenit"><div class="rand" style="height:auto;background:none;overflow:visible"><span style="font-size:14px">${n} <span class="mic">${m}</span></span><b style="font-size:14px;font-variant-numeric:tabular-nums">${lei(v)}</b></div><div><i style="width:${v/21}%;background:${col}"></i></div></div>`).join('')}</div>
+    <div class="card"><div class="titlu">Preț pe noapte, rezervări directe</div><div class="pret"><button data-a="pret" data-v="-10" aria-label="Scade prețul cu 10 lei">−</button><b>${pretAp()}</b><button data-a="pret" data-v="10" aria-label="Crește prețul cu 10 lei">+</button><span class="mic">lei</span></div></div>
+    <div class="card"><div class="titlu">Plăți</div><div class="lista"><div class="rand"><div><div>Luna trecută</div><div class="mic">Virată în cont</div></div><b style="font-variant-numeric:tabular-nums">5.180 lei</b></div></div><button class="btn al" data-a="raport">Descarcă raportul lunii</button></div></div>`},
+
+  /* ---------- Curățenie ---------- */
+  sarcini(){
+    const t=s.sarcini.find(x=>x.id===s.sarcinaDeschisa);
+    if(t) return `<div class="pad"><button class="inapoi" data-a="inchide-sarcina">‹ Sarcinile mele</button><div><h2>${t.ap}</h2><div class="sub" style="margin-top:4px">Gata până la ${t.ora}. Urmează: ${t.urm}.</div></div>
+      <div class="card"><div class="lista">${CURATARE.map((c,i)=>{const d=t.bif.includes(i);return `<button class="bif ${d?'da':''}" data-a="bif" data-v="${i}" aria-pressed="${d}"><i>${d?'✓':''}</i>${c}</button>`}).join('')}</div></div>
+      <button class="btn" data-a="inchide-sarcina" ${sarcinaGata(t)?'':'disabled'}>${sarcinaGata(t)?'Apartament gata':`Mai ai ${CURATARE.length-t.bif.length} pași`}</button></div>`;
+    const ale=s.sarcini.filter(x=>x.pers==='Maria');
+    return `<div class="pad"><div><div class="eticheta">Bună, Maria</div><h2 style="margin-top:6px">Azi ai ${ale.filter(x=>!sarcinaGata(x)).length} apartamente</h2></div>
+    ${ale.map(x=>`<div class="card"><div class="rand"><div><div class="titlu">${x.ap}</div><div class="mic">Până la ${x.ora} · ${x.urm}</div></div><span class="st ${sarcinaGata(x)?'v':x.bif.length?'a':'g'}">${sarcinaGata(x)?'Gata':x.bif.length?`${x.bif.length}/${CURATARE.length}`:'Neînceput'}</span></div><button class="btn ${sarcinaGata(x)?'al':''}" data-a="deschide-sarcina" data-v="${x.id}">${sarcinaGata(x)?'Vezi lista':x.bif.length?'Continuă':'Începe'}</button></div>`).join('')}</div>`},
+  defect(){
+    const tipuri=['Bec ars','Robinet care curge','Televizor defect','Lipsă consumabile','Altceva'];
+    return `<div class="pad"><div><h2>Raportează un defect</h2><div class="sub" style="margin-top:4px">Ajunge imediat la administrator.</div></div>
+    <div class="card"><div class="titlu">Apartament</div><div class="chips">${APARTAMENTE.map(a=>`<button data-a="defect-ap" data-v="${a}" aria-pressed="${s.defectAp===a}">${a}</button>`).join('')}</div></div>
+    <div class="card"><div class="titlu">Ce s-a întâmplat?</div><div class="chips">${tipuri.map(t=>`<button data-a="defect-tip" data-v="${t}" aria-pressed="${s.defectTip===t}">${t}</button>`).join('')}</div></div>
+    <button class="act ${s.defectFoto?'gata':''}" style="height:90px" data-a="defect-foto"><span>${s.defectFoto?'✓ Poză adăugată':'Adaugă o poză'}<br><small>Simulare, nu se folosește camera</small></span></button>
+    <button class="btn" data-a="trimite-defect" ${s.defectTip?'':'disabled'}>Trimite</button></div>`}
+};
+
+function btnCerere(k,t,txt){return s.comandate[k]?'<span class="st v">Trimis la recepție</span>':`<button class="mini" style="justify-self:start" data-a="cerere" data-k="${k}" data-v="${t}">${txt}</button>`}
+function butoaneRol(){return Object.entries(ROLURI).map(([k,r])=>`<button data-a="rol" data-v="${k}" aria-pressed="${s.rol===k}"><b>${r.nume}</b><span>${r.info}</span></button>`).join('')}
+
+function desen(pastreazaPozitia,laFinal){
+  const e=$('ecran'), sus=e.scrollTop, camp=$('mesaj'), avuseFocus=camp&&document.activeElement===camp;
+  if(camp) s.ciorna=camp.value;
+  $('roluriPrez').innerHTML=butoaneRol();
+  const apel=$('apel'); apel.hidden=!s.apel;
+  if(s.apel){const o=ECHIPA.find(x=>x.k===s.apel);apel.innerHTML=`<div class="av" aria-hidden="true">${o.n[0]}</div><h2>${o.n}</h2><div class="sub">Se apelează... ${o.rol}</div><div class="mic">Simulare. În aplicație se deschide apelul telefonului.</div><button data-a="inchide-apel">Închide</button>`}
+  if(!s.rol){ $('cap').hidden=true; $('tabs').hidden=true; e.innerHTML=V.start(); e.scrollTop=0; return }
+  const r=ROLURI[s.rol];
+  $('cap').hidden=false; $('tabs').hidden=false;
+  $('cap').innerHTML=`<div><small>Demo · ${r.nume}</small><b>Green Future Sinaia</b></div><button class="schimba" data-a="roluri">Schimbă rolul</button>`;
+  const k0=s.rol==='oaspete'?'ana':'maria';
+  if(s.tab==='chat') s.fire[k0].necititEi=0;
+  const bulina=k=>{const n=k==='mesaje'?necitite():k==='chat'?s.fire[k0].necititEi:0;return n?`<span class="bulina">${n}</span>`:''};
+  $('tabs').innerHTML=r.tabs.map(([k,n,i])=>`<button data-a="tab" data-v="${k}" ${s.tab===k?'aria-current="page"':''}><svg viewBox="0 0 24 24" aria-hidden="true">${ICON[i]}</svg>${n}${bulina(k)}</button>`).join('');
+  e.innerHTML=s.sub?V[s.sub]():V[s.tab]();
+  e.scrollTop=laFinal?e.scrollHeight:pastreazaPozitia?sus:0;
+  if(avuseFocus&&$('mesaj')) $('mesaj').focus();
+}
+
+const ACT = {
+  rol(v){s.rol=v;s.tab=ROLURI[v].tabs[0][0];s.sub=null;s.fir=null;s.propDesc=null;s.ciorna='';desen()},
+  roluri(){s.rol=null;s.tab=null;s.sub=null;s.fir=null;s.propDesc=null;s.ciorna='';desen()},
+  tab(v){s.tab=v;s.sub=null;s.fir=null;s.propDesc=null;s.sarcinaDeschisa=null;s.ciorna='';desen(0,v==='chat')},
+  sub(v){s.sub=v;s.propDesc=null;desen()},
+  mergi(v){if(ROLURI.admin.tabs.some(([k])=>k===v)){s.tab=v;s.sub=null}else{s.tab='mai';s.sub=v}s.propDesc=null;s.fir=null;desen()},
+  inapoi(){if(s.propDesc!==null)s.propDesc=null;else if(s.fir)s.fir=null;else s.sub=null;s.ciorna='';desen()},
+  filtru(v){s.filtru=v;desen(1)},
+  'deschide-fir'(v){s.fir=v;s.fire[v].necitit=0;s.ciorna='';desen(0,true)},
+  rapid(v){const i=$('mesaj');if(i)i.value='';s.ciorna='';trimiteMesaj(v)},
+  suna(v){s.apel=v;desen(1)},
+  'inchide-apel'(){s.apel=null;desen(1)},
+  'scrie-om'(v){s.tab='mesaje';s.sub=null;s.fir=v;s.filtru='echipa';s.fire[v].necitit=0;s.ciorna='';desen(0,true)},
+  'schimba-om'(v){const t=s.sarcini.find(x=>x.id==v);t.pers=t.pers==='Maria'?'Ioana':'Maria';desen(1);anunt(`${t.ap} este acum la ${t.pers}. Primește notificare.`)},
+  'nou-ap'(v){s.nouAp=v;desen(1)},
+  'nou-pers'(v){s.nouPers=v;desen(1)},
+  'sarcina-noua'(){s.sarcini.push({id:s.nextId++,ap:s.nouAp,ora:'18:00',urm:'Sarcină de la administrator',pers:s.nouPers,bif:[]});desen(1);anunt(`Sarcină trimisă către ${s.nouPers}: ${s.nouAp}.`)},
+  'deschide-prop'(v){s.propDesc=+v;desen()},
+  'adauga-prop'(){anunt('În aplicație completezi datele și pozele, iar apartamentul apare în calendar.')},
+  'pret-ap'(v){const [i,d]=v.split(':').map(Number);s.prop[i].pret=Math.max(100,s.prop[i].pret+d);desen(1)},
+  'cod-nou'(v){s.prop[+v].cod=String(1000+Math.floor(Math.random()*9000));desen(1);anunt('Cod nou generat. Oaspetele îl vede în aplicație.')},
+  activ(v){s.prop[+v].activ=!s.prop[+v].activ;desen(1)},
+  'cur-ap'(v){s.sarcini.push({id:s.nextId++,ap:s.prop[+v].nume,ora:'18:00',urm:'Sarcină de la administrator',pers:'Maria',bif:[]});desen(1);anunt('Sarcină trimisă Mariei.')},
+  'bloc-ap'(v){const d=blocheazaAp(s.prop[+v].nume);desen(1);anunt(`Blocat ${scurt(d)} - ${scurt(d+2)}.`)},
+  'defect-avans'(v){const d=s.defecte.find(x=>x.id==v);d.st=d.st==='Nou'?'În lucru':'Rezolvat';desen(1)},
+  comanda(v){s.stoc[+v].comandat=true;desen(1);anunt('Comandă trimisă la furnizor.')},
+  regula(v){s.reguliPret[+v].on=!s.reguliPret[+v].on;desen(1)},
+  'link-plata'(v){s.facturi.find(x=>x.id==v).link=true;desen(1);anunt('Linkul de plată a ajuns la oaspete.')},
+  'plata-ok'(v){s.facturi.find(x=>x.id==v).platit=true;desen(1)},
+  factura(v){s.facturi.find(x=>x.id==v).factura=true;desen(1);anunt('Factură emisă și trimisă în e-Factura.')},
+  decont(v){s.decont[+v].trimis=true;desen(1);anunt('Decont trimis proprietarului.')},
+  fisa(){anunt('Fișa de anunțare a sosirii este pregătită cu datele oaspetelui.')},
+  reaminteste(v){if(v==='Elena Dumitru')s.reminder=true;desen(1);anunt(`Reamintire trimisă: ${v}.`)},
+  raspunde(v){s.recenzii.find(x=>x.id==v).rasp=true;desen(1);anunt('Răspuns publicat.')},
+  auto(v){s.automat[+v].on=!s.automat[+v].on;desen(1)},
+  sync(){s.syncProaspat=true;desen(1);anunt('Calendare sincronizate.')},
+  'porneste-checkin'(){s.incheckin=true;s.pas=1;desen()},
+  'iesi-checkin'(){s.incheckin=false;desen()},
+  pas(v){s.pas=+v;desen()},
+  'foto-act'(){s.actFoto=true;desen(1)},
+  reguli(){s.reguli=!s.reguli;desen(1)},
+  'termina-checkin'(){s.incheckin=false;s.checkin=true;desen();anunt('Check-in făcut. Codul de la ușă este în aplicație.')},
+  zi(v){
+    const n=+v,[a,b]=s.sel,oc=ocupateDandelion();
+    if(a===null||b!==null||n<=a){s.sel=[n,null];return desen(1)}
+    for(let i=a;i<n;i++) if(oc.has(i)){s.sel=[n,null];anunt('Există zile ocupate în interval. Alege alte date.');return desen(1)}
+    if(n-a<2){anunt('Minimum 2 nopți.');return}
+    s.sel=[a,n];desen(1)
+  },
+  rezerva(){
+    const [a,b]=s.sel,n=b-a,total=n*pretAp()+CURATENIE,id=s.nextId++;
+    s.rezervari.push({id,nume:'Oaspete nou',ap:'Studio Dandelion',d:a,n,canal:'Direct',st:'cerere',total});
+    s.evenimente.push({ap:'Studio Dandelion',d:a,n,canal:'Direct',t:'Cerere',cerere:true,rez:id});
+    s.sel=[null,null];desen();anunt('Cerere trimisă. Schimbă rolul pe Administrator ca să o confirmi.')
+  },
+  cerere(v,el){s.comandate[el.dataset.k]=1;s.cereri.unshift(v);desen(1);anunt('Cererea a ajuns la administrator.')},
+  confirma(v){
+    const r=s.rezervari.find(x=>x.id==v);r.st='confirmata';
+    const e=s.evenimente.find(x=>x.rez==v);if(e){e.cerere=false;e.t='Direct'}
+    desen(1);anunt('Rezervare confirmată. Oaspetele primește mesaj, iar calendarul s-a actualizat.')
+  },
+  refuza(v){
+    s.rezervari.find(x=>x.id==v).st='refuzata';
+    s.evenimente=s.evenimente.filter(x=>x.rez!=v);desen(1);anunt('Cerere refuzată. Datele sunt din nou libere.')
+  },
+  blocheaza(){blocheazaAp('Studio Dandelion');desen(1);anunt('Date blocate. Se văd în calendarul administratorului.')},
+  deblocheaza(){s.evenimente=s.evenimente.filter(e=>!(e.ap==='Studio Dandelion'&&e.canal==='Blocat'));desen(1)},
+  pret(v){s.prop[0].pret=Math.max(100,s.prop[0].pret+ +v);desen(1)},
+  raport(){anunt('În aplicația reală se descarcă raportul lunii.')},
+  'deschide-sarcina'(v){s.sarcinaDeschisa=+v;desen()},
+  'inchide-sarcina'(){
+    const t=s.sarcini.find(x=>x.id===s.sarcinaDeschisa),g=t&&sarcinaGata(t);
+    s.sarcinaDeschisa=null;desen();if(g)anunt(`${t.ap} este gata. Administratorul vede statusul nou.`)
+  },
+  bif(v){const t=s.sarcini.find(x=>x.id===s.sarcinaDeschisa),i=+v,p=t.bif.indexOf(i);p<0?t.bif.push(i):t.bif.splice(p,1);desen(1)},
+  'defect-ap'(v){s.defectAp=v;desen(1)},
+  'defect-tip'(v){s.defectTip=v;desen(1)},
+  'defect-foto'(){s.defectFoto=true;desen(1)},
+  'trimite-defect'(){
+    s.defecte.unshift({id:s.nextId++,ap:s.defectAp,tip:s.defectTip,de:'Maria',st:'Nou'});
+    s.defectTip=null;s.defectFoto=false;desen();anunt('Defect trimis. Apare la administrator, în Mentenanță.')
+  }
+};
+document.addEventListener('submit',ev=>{
+  ev.preventDefault();
+  const i=$('mesaj'); if(!i) return;
+  const t=i.value; i.value=''; s.ciorna=''; trimiteMesaj(t);
+});
+document.addEventListener('click',ev=>{
+  const b=ev.target.closest('[data-a]'); if(!b||b.disabled) return;
+  ACT[b.dataset.a](b.dataset.v,b);
+});
+desen();
+</script>
+</body>
+</html>
