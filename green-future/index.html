@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Aplicația Green Future Sinaia</title>
-<meta name="description" content="Prezentare pas cu pas: cum rezervă și comandă un client, cum primește cardul de membru și cum gestionează proprietarul contul.">
+<meta name="description" content="De unde a pornit ideea, cum arată aplicația pentru client și proprietar și cum o vom promova.">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#0C110D">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -120,7 +120,7 @@ h3{font-size:25px;line-height:1.08}
 .coperta>*:not(img){position:relative;z-index:1}
 .coperta h1{font-size:clamp(46px,8.5vw,84px);line-height:.98}
 .coperta p{font-size:clamp(16px,1.8vw,20px);line-height:1.4;max-width:54ch}
-.alege{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:9px;max-width:720px}
+.alege{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:9px;max-width:960px}
 .alege button{min-height:92px;padding:14px;text-align:left;background:rgba(20,27,21,.93);border:1px solid var(--line);border-radius:12px;display:grid;gap:4px;align-content:center}
 .alege button:first-child{background:var(--accent);color:var(--on);border-color:var(--accent)}
 .alege button:first-child span{color:#3C2F15}
@@ -134,7 +134,34 @@ h3{font-size:25px;line-height:1.08}
 #inainte{background:var(--accent);color:var(--on)}
 #pozitie{flex:1;min-width:0;text-align:center;font-size:13px;line-height:1.25;color:var(--soft)}
 .jos-p button[disabled]{opacity:.38;cursor:default}
+/* Panouri pentru Idee și Promovare, fără telefon */
+.panou{display:grid;gap:10px;min-width:0;font-size:15px;line-height:1.35}
+.panou .btn{margin-top:2px}
+.panou .foto-p{width:100%;height:190px;object-fit:cover;border-radius:12px;display:block}
+.bloc{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:grid;gap:4px;min-width:0}
+.bloc b{font-size:16px}
+.bloc small{font-size:13.5px;line-height:1.35;color:var(--soft)}
+.bloc .zic{font-family:var(--titlu);font-size:19px;line-height:1.2;color:var(--accent2)}
+.bloc.tare{border-color:var(--accent)}
+.bloc.stins{opacity:.85;border-style:dashed}
+.coperta p.nota{font-size:13px}
+.doua{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.eti{font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--accent)}
+.etape{display:grid;gap:8px}
+.etapa{display:grid;grid-template-columns:96px minmax(0,1fr);gap:12px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.etapa.tare{border-color:var(--accent)}
+.etapa.stins{opacity:.85;border-style:dashed}
+.etapa>b{font-family:var(--titlu);font-size:19px;font-weight:600;line-height:1.1;color:var(--accent2)}
+.etapa small{display:block;font-size:13.5px;line-height:1.35;color:var(--soft)}
+.cerc{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:8px;align-items:stretch}
+.cerc>span{display:grid;place-items:center;color:var(--accent);font-size:18px}
+.cerc .bloc{text-align:center;align-content:center}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips span{padding:6px 11px;border:1px solid var(--line);border-radius:99px;font-size:13.5px;background:var(--surface2)}
+@media (max-width:480px){.doua{grid-template-columns:1fr}.etapa{grid-template-columns:1fr;gap:4px}}
 @media (min-width:860px){
+  .slide.cu-panou{grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:48px}
+  .bloc small,.etapa small,.chips span{font-size:15px}
   .slide.cu-tel{grid-template-columns:minmax(0,1fr) 346px;gap:56px}
   .poveste{gap:15px}
   #scena{padding-top:20px}
@@ -164,7 +191,17 @@ const camp=(e,v)=>`<div class="camp"><small>${e}</small><div>${v}</div></div>`;
 const cardM=(cls,niv)=>`<section class="card-m ${cls}" aria-label="Cardul de membru"><div class="sus">Green Future Club</div><b class="niv">${niv}</b><div class="jos"><div>Ana Marinescu<small>Membru din 2026</small></div><div style="text-align:right"><small>Număr card</small>GF-000128</div></div></section>`;
 const calendar=()=>{let c='';['L','M','M','J','V','S','D'].forEach(x=>c+=`<i>${x}</i>`);for(let i=2;i<=29;i++)c+=`<u class="${i<7||i===10||i===11?'x':i===14||i===16?'s':i===15?'b':''}">${i}</u>`;return `<div class="luna">${c}</div>`};
 
+const panou=(corp,b)=>`<div class="panou apare">${corp}${buton(b||'Mai departe')}</div>`;
+const etapa=(n,t,x,c)=>`<div class="etapa ${c||''}"><b>${n}</b><div><div class="tit">${t}</div><small>${x}</small></div></div>`;
+const bloc=(t,x,c)=>`<div class="bloc ${c||''}"><b>${t}</b><small>${x}</small></div>`;
+
 const F=[
+ {id:'idee',cine:'idee',nume:'De unde a pornit',pasi:[
+  {w:1,t:'Oamenii nu mai caută doar un loc de dormit',p:'Vor să le fie bine în fiecare moment al sejurului. De aici a pornit aplicația: de la ce simte clientul, nu de la tehnologie.',e:()=>panou(`<img class="foto-p" src="${P}piscina.jpg" alt="Piscina complexului"><div class="doua"><div class="bloc stins"><span class="eti">Cazare obișnuită</span><small>Iei cheia, dormi, pleci.</small></div><div class="bloc tare"><span class="eti">Ce își doresc azi</span><small>Cineva la care să apeleze, micul dejun comandat din telefon, spa la câțiva pași și un motiv să revină.</small></div></div>`)},
+  {w:1,t:'De obicei, legătura se termină la plecare',p:'Clientul pleacă, iar proprietarul nu mai are cum să-i spună că îl așteaptă. Data viitoare, omul o ia de la capăt cu o nouă căutare.',e:()=>panou(`<div class="etape">${etapa('Înainte','Caută și rezervă','Găsește locul printre multe altele.')}${etapa('În timpul sejurului','Stă și se bucură','Dacă are nevoie de ceva, caută un număr de telefon.')}${etapa('După','Legătura se oprește','Niciun mesaj, niciun motiv să revină la același loc.','stins')}</div>`)},
+  {w:1,t:'Aplicația însoțește clientul tot drumul',p:'Tot sejurul stă într-un singur loc, în telefonul lui. Nu mai caută numere de telefon și nu mai sare de la un site la altul.',e:()=>panou(`<div class="etape">${etapa('Înainte','Rezervă direct','Vede zilele libere, prețul exact și povestea locului.','tare')}${etapa('În timpul sejurului','Are totul la îndemână','Comandă de la bistro și îi scrie gazdei direct din aplicație.','tare')}${etapa('După','Rămâne aproape','Spune cum i-a fost, primește cardul de membru și oferte pe telefon.','tare')}</div>`)},
+  {w:1,t:'După plecare, legătura rămâne caldă',p:'Aici e diferența. Clientul mulțumit nu se pierde: are un motiv să se întoarcă și o face direct, fără intermediar.',e:()=>panou(`<div class="cerc">${bloc('Sejur','O experiență plăcută')}<span aria-hidden="true">›</span>${bloc('Recenzie','Cerută a doua zi după plecare')}<span aria-hidden="true">›</span>${bloc('Card de membru','Reduceri care cresc')}</div><div class="bloc tare" style="text-align:center"><div class="zic">„Ana, revino în Sinaia.”</div><small>Oferta ajunge direct pe telefonul clientului, iar următoarea rezervare vine direct la proprietar.</small></div>`,'Să vedem cum arată pentru client')}
+ ]},
  {id:'rezervare',cine:'client',nume:'Rezervare',pasi:[
   {t:'Clientul alege perioada',p:'Deschide aplicația, alege datele și numărul de persoane și vede ce e liber.',s:'Calendarul ține cont și de rezervările venite de pe Booking.',e:()=>tel('Green Future','Sinaia',`<img class="foto" src="${P}exterior.jpg" alt="Complexul Green Future"><div class="interior"><h3>Apartamente cu wellness, la poalele Bucegilor</h3><div class="doi">${camp('Sosire','14 noi')}${camp('Plecare','16 noi')}</div>${camp('Persoane','2 adulți')}${buton('Caută apartamente')}</div>`,CL,'Acasă',1)},
   {t:'Vede apartamentele libere',p:'Pentru un grup mai mare, aplicația recomandă mai multe apartamente împreună.',e:()=>tel('Apartamente','14 - 16 noi',`<button class="cart tinta" data-a="next" style="padding:0;overflow:hidden;text-align:left"><img class="foto" src="${P}living.jpg" alt="Studio Dandelion" style="height:190px"><span style="padding:10px;display:grid;gap:4px"><span class="r"><span class="tit">Studio Dandelion</span><b>800 lei</b></span><span class="mic">2+2 persoane · 2 nopți, cu curățenie</span></span></button><div class="mic" style="text-align:center">Atinge apartamentul</div>`,CL,'Apartamente')},
@@ -214,7 +251,14 @@ const F=[
   {t:'Stabilește prețurile pe perioade',p:'Proprietarul pune prețuri pentru sărbători sau sezon și un minim de nopți.',o:'Valori de exemplu.',e:()=>tel('Studio Dandelion','Setări',`<div class="cart"><div class="tit">Prețuri pe perioade</div><div class="r"><span>Februarie</span><b>420 lei</b></div></div><div class="doi">${camp('De la','20 dec')}${camp('Până la','5 ian')}</div><div class="doi">${camp('Preț (lei)','480')}${camp('Nopți minim','3')}</div>${camp('Etichetă','Sărbători')}${buton('Adaugă perioada')}`,PN,'Mai mult')},
   {t:'Controlează calendarul și Clubul',p:'Blochează date pentru sine, leagă Booking sau Airbnb și alege dacă participă la Club.',e:()=>tel('Studio Dandelion','Setări',`<div class="cart"><div class="r"><span>20 dec - 5 ian</span><b>480 lei</b></div><div class="mic">Minim 3 nopți (Sărbători)</div></div><div class="cart"><div class="tit">Date blocate</div><div class="r"><span>10 - 12 ian</span><span class="mic">Personal</span></div></div><div class="cart"><div class="r"><span>Calendar Booking</span><span class="st v">Conectat</span></div><div class="r"><span>Green Future Club</span><span class="st v">Particip</span></div></div>${buton('Adaugă alt apartament')}`,PN,'Mai mult')},
   {t:'Își adaugă singur apartamentul',p:'Completează totul de pe telefon și trimite spre publicare.',s:'Publicarea cere minimum 3 poze, descriere și preț, apoi aprobarea administratorului.',o:'Exemplu de completare.',e:()=>tel('Apartament nou','Ciornă',`${camp('Numele apartamentului','Studio Brad')}<div class="doi">${camp('Câte persoane','2')}${camp('Preț pe noapte','320 lei')}</div>${camp('Povestea apartamentului','Un colț liniștit, cu vedere la brazi.')}<div class="pozeg"><img src="${P}dormitor.jpg" alt="Dormitor"><img src="${P}cozy.jpg" alt="Living"><img src="${P}munte.jpg" alt="Vedere"></div>${buton('Trimite spre publicare')}`,PN,'Mai mult')},
-  {t:'Asta e aplicația',p:'Clientul rezervă direct și revine pentru reduceri. Proprietarul gestionează totul de pe telefon, fără comision de intermediar.',o:'Încă în lucru: plata cu cardul, comenzile reale la bistro și publicarea în App Store și Google Play.',e:()=>tel('Green Future','Sinaia',`<img class="foto" src="${P}piscina.jpg" alt="Piscina complexului" style="height:230px"><div class="interior"><h3>Mulțumim!</h3><div class="mic">greenfuturesinaia.com</div><button class="btn tinta" data-a="start">Reia prezentarea</button></div>`,CL,'Acasă',1)}
+ ]},
+ {id:'promovare',cine:'promo',nume:'Cum vom promova',pasi:[
+  {w:1,t:'Mai întâi, trebuie să ne găsească',p:'Aplicația îl păstrează pe client aproape. Promovarea îl aduce prima dată. Vom fi acolo unde oamenii întreabă deja.',e:()=>panou(`<div class="bloc"><span class="eti">Pe Google</span><div class="zic">„cazare Sinaia cu piscină”</div></div><div class="bloc"><span class="eti">Pe Google Maps</span><div class="zic">„apartamente lângă Peleș”</div></div><div class="bloc"><span class="eti">În ChatGPT și alți asistenți</span><div class="zic">„Unde stăm în Sinaia, cu spa și mic dejun?”</div></div>`)},
+  {w:1,t:'Pornim de la cuvintele folosite de oameni',p:'Vom alege căutările unor oameni gata să rezerve, nu cuvinte la modă.',o:'Listă de pornire. O vom confirma cu datele din Google.',e:()=>panou(`<div class="bloc"><span class="eti">Locul</span><div class="chips"><span>cazare Sinaia</span><span>apartamente Sinaia</span><span>cazare lângă Peleș</span></div></div><div class="bloc"><span class="eti">Ce își doresc</span><div class="chips"><span>cazare Sinaia cu piscină</span><span>apartament cu spa Sinaia</span><span>vedere la munte</span></div></div><div class="bloc"><span class="eti">Momentul</span><div class="chips"><span>Revelion Sinaia</span><span>weekend la Sinaia</span><span>cazare pentru schi</span></div></div><div class="bloc"><span class="eti">Turiști din afară</span><div class="chips"><span>apartments in Sinaia</span><span>Sinaia hotel with pool</span></div></div>`)},
+  {w:1,t:'Cum vom apărea în fiecare loc',p:'Fiecare loc are regulile lui, dar ideea e aceeași: informații clare, adevărate și ușor de găsit.',e:()=>panou(`<div class="etape">${etapa('Google','Pagini care răspund exact','Câte o pagină pentru Revelion, schi sau weekend la spa.')}${etapa('Google Maps','Un profil bine îngrijit','Adresă, poze reale, program și recenzii la care răspundem.')}${etapa('ChatGPT','Informații ușor de citat','Răspunsuri clare pe site și prezență pe alte site-uri de încredere.')}</div>`)},
+  {w:1,t:'Clienții mulțumiți ne vor face reclamă',p:'Experiența bună devine ea însăși promovare, iar aplicația ne ajută să o transmitem mai departe.',o:'Vom verifica regulile platformelor de rezervări înainte să promovăm rezervarea directă oaspeților veniți de acolo.',e:()=>panou(`<div class="doua">${bloc('Recenzii','Cerem părerea imediat după sejur, cât amintirea e proaspătă.')}${bloc('Instagram și Facebook','Poze reale, povești și locul văzut prin ochii oaspeților.')}${bloc('Cod QR în apartament','Oaspetele descoperă aplicația chiar în timpul sejurului.')}${bloc('Oferte pentru clienții vechi','Mesaj direct pe telefon în perioadele mai libere.')}</div>`)},
+  {w:1,t:'Cum vom ști că merge',p:'Pornim cu pași mici și urmărim câteva cifre simple, ca să știm ce merită continuat.',o:'Termenele sunt o propunere. Nimeni nu poate garanta locul 1 pe Google, iar rezultatele apar de obicei după câteva luni.',e:()=>panou(`<div class="etape">${etapa('Luna 1','Punem bazele','Alegem cuvintele, îngrijim site-ul și profilul de Google Maps.')}${etapa('Lunile 2-3','Publicăm','Pagini noi, poze, recenzii și primele postări.')}${etapa('Din luna 4','Măsurăm și ajustăm','Câți ne găsesc, câți instalează aplicația și câte rezervări vin direct.','tare')}</div>`)},
+  {t:'Asta e aplicația',p:'Clientul trăiește o experiență plăcută și rămâne aproape. Proprietarul gestionează totul de pe telefon și primește rezervări directe, fără comision de intermediar.',o:'Încă în lucru: plata cu cardul, comenzile reale la bistro și publicarea în App Store și Google Play.',e:()=>tel('Green Future','Sinaia',`<img class="foto" src="${P}piscina.jpg" alt="Piscina complexului" style="height:230px"><div class="interior"><h3>Mulțumim!</h3><div class="mic">greenfuturesinaia.com</div><button class="btn tinta" data-a="start">Reia prezentarea</button></div>`,CL,'Acasă',1)}
  ]}
 ];
 const LIN=[];F.forEach((f,fi)=>f.pasi.forEach((p,pi)=>LIN.push({f,fi,p,pi,id:`${f.id}-${pi+1}`})));
@@ -223,18 +267,20 @@ const $=id=>document.getElementById(id);
 function meniu(){
   const fa=poz>=0?LIN[poz].f.id:null;
   const b=f=>`<button data-a="flux" data-v="${f.id}" aria-current="${f.id===fa}">${f.nume}</button>`;
-  $('meniu').innerHTML=`<button data-a="start" aria-current="${poz<0}">Început</button><span class="gr">Client</span>${F.filter(f=>f.cine==='client').map(b).join('')}<span class="gr">Proprietar</span>${F.filter(f=>f.cine==='gest').map(b).join('')}`;
+  const g=(et,c)=>`<span class="gr">${et}</span>${F.filter(f=>f.cine===c).map(b).join('')}`;
+  $('meniu').innerHTML=`<button data-a="start" aria-current="${poz<0}">Început</button>${g('Ideea','idee')}${g('Client','client')}${g('Proprietar','gest')}${g('Promovare','promo')}`;
   const c=document.querySelector('#meniu [aria-current=true]');if(c)c.scrollIntoView({block:'nearest',inline:'center'});
 }
 function arata(n,faraHash){
   poz=Math.max(-1,Math.min(LIN.length-1,n));meniu();
   const sc=$('scena');
   if(poz<0){
-    sc.innerHTML=`<div class="slide"><section class="coperta"><img src="${P}piscina.jpg" alt="Piscina interioară a complexului"><div class="eticheta">Prezentarea aplicației</div><h1>Green Future Sinaia</h1><p>Ce trăiește clientul și ce vede proprietarul, pas cu pas. Apasă pe butonul care pulsează în telefon, ca în aplicația adevărată.</p><div class="alege"><button data-a="flux" data-v="rezervare"><b>Începe ca un client</b><span>Rezervare, comandă, card de membru, notificare</span></button><button data-a="flux" data-v="intrare"><b>Începe ca un proprietar</b><span>Intrare în cont, confirmări, mesaje, prețuri</span></button></div><p class="nota">Ecrane refăcute după aplicație, cu datele unui oaspete de exemplu. Pozele sunt reale.</p></section></div>`;
+    sc.innerHTML=`<div class="slide"><section class="coperta"><img src="${P}piscina.jpg" alt="Piscina interioară a complexului"><div class="eticheta">Prezentarea aplicației</div><h1>Green Future Sinaia</h1><p>O experiență mai frumoasă pentru oaspeți și o legătură care rămâne caldă și după plecare. Apasă pe butonul care pulsează.</p><div class="alege"><button data-a="flux" data-v="idee"><b>De unde a pornit ideea</b><span>Ce își doresc azi clienții și ce le oferim</span></button><button data-a="flux" data-v="rezervare"><b>Ca un client</b><span>Rezervare, comandă, card de membru, notificare</span></button><button data-a="flux" data-v="intrare"><b>Ca un proprietar</b><span>Intrare în cont, confirmări, mesaje, prețuri</span></button><button data-a="flux" data-v="promovare"><b>Cum vom promova</b><span>Google, Google Maps, ChatGPT și recomandări</span></button></div><p class="nota">Ecrane refăcute după aplicație, cu datele unui oaspete de exemplu. Pozele sunt reale.</p></section></div>`;
     $('pozitie').textContent='Început';
   }else{
     const x=LIN[poz],np=x.f.pasi.length;
-    sc.innerHTML=`<div class="slide cu-tel"><section class="poveste"><div class="eticheta">${x.f.cine==='client'?'Ca un client':'Ca un proprietar'} · ${x.f.nume}</div><div class="pasi" aria-hidden="true">${x.f.pasi.map((_,k)=>`<i class="${k<=x.pi?'g':''}"></i>`).join('')}</div><h2>${x.p.t}</h2><p>${x.p.p}</p>${x.p.s?`<div class="spate"><b>În spate</b>${x.p.s}</div>`:''}${x.p.o?`<div class="obs">${x.p.o}</div>`:''}</section>${x.p.e()}</div>`;
+    const et={idee:'Ideea',client:'Ca un client',gest:'Ca un proprietar',promo:'Promovare'}[x.f.cine];
+    sc.innerHTML=`<div class="slide ${x.p.w?'cu-panou':'cu-tel'}"><section class="poveste"><div class="eticheta">${et} · ${x.f.nume}</div><div class="pasi" aria-hidden="true">${x.f.pasi.map((_,k)=>`<i class="${k<=x.pi?'g':''}"></i>`).join('')}</div><h2>${x.p.t}</h2><p>${x.p.p}</p>${x.p.s?`<div class="spate"><b>În spate</b>${x.p.s}</div>`:''}${x.p.o?`<div class="obs">${x.p.o}</div>`:''}</section>${x.p.e()}</div>`;
     $('pozitie').textContent=`${x.f.nume}, pasul ${x.pi+1} din ${np}`;
   }
   sc.scrollTop=0;
