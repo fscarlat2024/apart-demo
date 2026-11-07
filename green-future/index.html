@@ -115,9 +115,11 @@ h3{font-size:25px;line-height:1.08}
 .apasa{margin-top:auto;font-size:12.5px;color:#E8E6DA}
 /* Copertă */
 .coperta{position:relative;display:grid;grid-template-columns:minmax(0,1fr);align-content:end;gap:12px;min-height:min(72dvh,570px);border-radius:16px;overflow:hidden;padding:clamp(16px,4vw,38px)}
-.coperta>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.coperta .poza-cop{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 22%}
+.credit-tel{display:none}
+@media (max-width:859px){.credit-tel{display:inline}}
 .coperta::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(12,17,13,.1) 12%,rgba(12,17,13,.92) 70%)}
-.coperta>*:not(img){position:relative;z-index:1}
+.coperta>*:not(picture){position:relative;z-index:1}
 .coperta h1{font-size:clamp(46px,8.5vw,84px);line-height:.98}
 .coperta p{font-size:clamp(16px,1.8vw,20px);line-height:1.4;max-width:54ch}
 .alege{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:9px;max-width:960px}
@@ -158,7 +160,12 @@ h3{font-size:25px;line-height:1.08}
 .cerc .bloc{text-align:center;align-content:center}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chips span{padding:6px 11px;border:1px solid var(--line);border-radius:99px;font-size:13.5px;background:var(--surface2)}
-@media (max-width:480px){.coperta{padding-top:170px}.doua{grid-template-columns:1fr}.etapa{grid-template-columns:1fr;gap:4px}}
+@media (max-width:859px){
+  .coperta{padding-top:255px;background:var(--ground);border:1px solid var(--line)}
+  .coperta .poza-cop{height:330px;bottom:auto;object-position:12% 50%}
+  .coperta::after{bottom:auto;height:330px;background:linear-gradient(180deg,rgba(12,17,13,0) 62%,var(--ground) 100%)}
+}
+@media (max-width:480px){.doua{grid-template-columns:1fr}.etapa{grid-template-columns:1fr;gap:4px}}
 @media (min-width:860px){
   .slide.cu-panou{grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:48px}
   .bloc small,.etapa small,.chips span{font-size:15px}
@@ -275,7 +282,7 @@ function arata(n,faraHash){
   poz=Math.max(-1,Math.min(LIN.length-1,n));meniu();
   const sc=$('scena');
   if(poz<0){
-    sc.innerHTML=`<div class="slide"><section class="coperta"><img src="${P}fatada.jpg" alt="Fațada complexului Green Future Sinaia" style="object-position:50% 22%"><div class="eticheta">Prezentarea aplicației</div><h1>Green Future Sinaia</h1><p>O experiență mai frumoasă pentru oaspeți și o legătură care rămâne caldă și după plecare. Apasă pe butonul care pulsează.</p><div class="alege"><button data-a="flux" data-v="idee"><b>De unde a pornit ideea</b><span>Ce își doresc azi clienții și ce le oferim</span></button><button data-a="flux" data-v="rezervare"><b>Ca un client</b><span>Rezervare, comandă, card de membru, notificare</span></button><button data-a="flux" data-v="intrare"><b>Ca un proprietar</b><span>Intrare în cont, confirmări, mesaje, prețuri</span></button><button data-a="flux" data-v="promovare"><b>Cum vom promova</b><span>Google, Google Maps, ChatGPT și recomandări</span></button></div><p class="nota">Ecrane refăcute după aplicație, cu datele unui oaspete de exemplu. Pozele sunt reale.</p></section></div>`;
+    sc.innerHTML=`<div class="slide"><section class="coperta"><picture><source media="(max-width:859px)" srcset="${P}peles.jpg"><img class="poza-cop" src="${P}fatada.jpg" alt="Green Future Sinaia"></picture><div class="eticheta">Prezentarea aplicației</div><h1>Green Future Sinaia</h1><p>O experiență mai frumoasă pentru oaspeți și o legătură care rămâne caldă și după plecare. Apasă pe butonul care pulsează.</p><div class="alege"><button data-a="flux" data-v="idee"><b>De unde a pornit ideea</b><span>Ce își doresc azi clienții și ce le oferim</span></button><button data-a="flux" data-v="rezervare"><b>Ca un client</b><span>Rezervare, comandă, card de membru, notificare</span></button><button data-a="flux" data-v="intrare"><b>Ca un proprietar</b><span>Intrare în cont, confirmări, mesaje, prețuri</span></button><button data-a="flux" data-v="promovare"><b>Cum vom promova</b><span>Google, Google Maps, ChatGPT și recomandări</span></button></div><p class="nota">Ecrane refăcute după aplicație, cu datele unui oaspete de exemplu. Pozele sunt reale.<span class="credit-tel"> Foto Castelul Peleș: <a href="https://commons.wikimedia.org/wiki/File:Castelul_Peles_in_culori_de_toamna.jpg" rel="noopener">Magda Constantin, Wikimedia Commons</a>, CC BY-SA 3.0 RO.</span></p></section></div>`;
     $('pozitie').textContent='Început';
   }else{
     const x=LIN[poz],np=x.f.pasi.length;
