@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aplicația Green Future Sinaia</title>
+<meta name="description" content="Prezentarea aplicației Green Future Sinaia pentru oaspeți, membri și proprietari.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#10201A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Verde de brad și ocru, ca pe site-ul Green Future. Text la stânga, ecranul aplicației la dreapta. */
+:root{
+  --fond:#10201A;--fond2:#0B1612;--panou:#1A2E27;--panou2:#27423A;--text:#F4F0E6;--stins:#BDC6BB;--linie:rgba(244,240,230,.15);
+  --ocru:#E0A93F;--ocru-text:#241703;--verde:#8AD3A6;--rosu:#F1A08F;
+  --titlu:"Spectral",Georgia,serif;--corp:"Figtree","Segoe UI",system-ui,sans-serif;color-scheme:dark;
+}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;background:var(--fond2);color:var(--text);font-family:var(--corp);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:focus-visible,a:focus-visible{outline:2px solid var(--ocru);outline-offset:2px}
+h1,h2,h3{font-family:var(--titlu);font-weight:500;text-wrap:balance}
+.pagina{height:100dvh;display:grid;grid-template-rows:auto minmax(0,1fr) auto}
+/* Capitole */
+.capitole{display:flex;align-items:center;gap:7px;padding:calc(env(safe-area-inset-top) + 10px) max(16px,env(safe-area-inset-right)) 10px max(16px,env(safe-area-inset-left));overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--linie);background:var(--fond)}
+.capitole::-webkit-scrollbar{display:none}
+.marca{flex:none;font-family:var(--titlu);font-size:17px;font-weight:600;margin-right:10px;white-space:nowrap}
+.capitole button{flex:none;min-height:40px;padding:0 13px;border:1px solid var(--linie);border-radius:99px;font-size:14px;font-weight:500;white-space:nowrap}
+.capitole button[aria-current=true]{background:var(--ocru);border-color:var(--ocru);color:var(--ocru-text);font-weight:600}
+/* Conținut */
+#scena{min-height:0;overflow-y:auto;padding:20px max(16px,env(safe-area-inset-right)) 22px max(16px,env(safe-area-inset-left))}
+.slide{max-width:1120px;margin:0 auto;display:grid;gap:22px;min-height:100%;align-items:center}
+.text{display:grid;gap:14px;min-width:0}
+.eticheta{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ocru)}
+.text h1{font-size:clamp(38px,6vw,64px);line-height:1.02}
+.text h2{font-size:clamp(30px,4.2vw,48px);line-height:1.06}
+.text p{font-size:clamp(16px,1.6vw,19px);line-height:1.5;color:#DDE1D6;max-width:50ch}
+.puncte{list-style:none;padding:0;display:grid;gap:9px;font-size:clamp(15px,1.4vw,17px);line-height:1.4}
+.puncte li{display:grid;grid-template-columns:18px 1fr;gap:9px}
+.puncte li::before{content:"";width:8px;height:8px;margin-top:7px;border-radius:50%;background:var(--ocru)}
+.nota{font-size:13.5px;line-height:1.4;color:var(--stins)}
+.stare{display:inline-block;justify-self:start;padding:5px 11px;border-radius:99px;font-size:13px;font-weight:600;border:1px solid var(--linie)}
+.stare.v{color:var(--verde)}.stare.a{color:var(--ocru)}
+/* Telefonul */
+.tel{justify-self:center;width:min(100%,340px);height:600px;border-radius:32px;border:8px solid #2A3B35;background:var(--fond);overflow:hidden;display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(0,0,0,.45)}
+.ecr{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column}
+.ecr-cap{flex:none;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 14px 9px;border-bottom:1px solid var(--linie);font-size:13px}
+.ecr-cap b{font-family:var(--titlu);font-size:15.5px;font-weight:600}
+.ecr-corp{flex:1;min-height:0;overflow:hidden;padding:12px 14px;display:flex;flex-direction:column;gap:10px;font-size:13.5px;line-height:1.35}
+.ecr-corp.far{padding:0}
+.ecr-corp.far>.intern{padding:10px 14px 12px;display:flex;flex-direction:column;gap:10px;flex:1;min-height:0}
+.ecr h3{font-size:22px;line-height:1.1}
+.mic{font-size:12.5px;line-height:1.35;color:var(--stins)}
+.foto{width:100%;height:170px;object-fit:cover;display:block;flex:none}
+.foto.r{border-radius:10px}
+.cart{background:var(--panou);border:1px solid var(--linie);border-radius:11px;padding:11px;display:grid;gap:7px;min-width:0}
+.r{display:flex;justify-content:space-between;align-items:center;gap:8px;min-width:0}
+.tit{font-weight:600}
+.ac{width:100%;min-height:42px;border-radius:9px;background:var(--ocru);color:var(--ocru-text);font-weight:600;font-size:14px;flex:none}
+.ac.al{background:transparent;color:var(--text);border:1px solid var(--linie)}
+.doi{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.cp{background:var(--panou2);border-radius:8px;padding:7px 10px;display:grid;gap:1px}
+.cp small{font-size:11px;color:var(--stins)}
+.ch{display:flex;flex-wrap:wrap;gap:5px}
+.ch span{padding:4px 9px;border:1px solid var(--linie);border-radius:99px;font-size:12px}
+.st{font-size:12px;font-weight:600;white-space:nowrap}.st.v{color:var(--verde)}.st.a{color:var(--ocru)}.st.g{color:var(--stins)}
+.scor{display:grid;place-items:center;width:44px;height:44px;border-radius:9px;background:var(--ocru);color:var(--ocru-text);font-weight:700;font-size:16px;flex:none}
+.poveste{border:1px solid var(--ocru);border-radius:10px;padding:10px;font-family:var(--titlu);font-size:14.5px;line-height:1.35}
+.luna{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center;font-size:12px}
+.luna i{font-style:normal;color:var(--stins);font-size:10.5px}
+.luna u{text-decoration:none;min-height:29px;display:grid;place-items:center;border-radius:5px;background:var(--panou2)}
+.luna u.x{background:none;color:#6F8078;text-decoration:line-through}
+.luna u.s{background:var(--ocru);color:var(--ocru-text);font-weight:700}
+.luna u.b{background:rgba(224,169,63,.3)}
+.bula{max-width:84%;padding:8px 11px;border-radius:12px;background:var(--panou2);align-self:flex-start}
+.bula.eu{align-self:flex-end;background:var(--ocru);color:var(--ocru-text)}
+.scrie{margin-top:auto;display:flex;gap:6px;flex:none}
+.scrie span{flex:1;min-height:40px;display:flex;align-items:center;padding:0 12px;border:1px solid var(--linie);border-radius:99px;color:var(--stins)}
+.scrie b{min-height:40px;display:flex;align-items:center;padding:0 13px;border-radius:99px;background:var(--ocru);color:var(--ocru-text);font-size:13px}
+.club{border-radius:12px;padding:14px;background:linear-gradient(135deg,#C8C9C4,#EEEFEA 55%,#AEB0AA);color:#1B2320;display:grid;gap:3px}
+.club small{font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:600}
+.club h3{font-size:30px}
+.nivel{display:grid;gap:7px}
+.nivel>div{display:flex;justify-content:space-between;gap:8px}
+.bara{height:8px;border-radius:9px;background:var(--panou2);overflow:hidden}
+.bara i{display:block;height:100%;background:var(--ocru)}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.kpis>div{background:var(--panou);border:1px solid var(--linie);border-radius:10px;padding:9px}
+.kpis b{display:block;font-family:var(--titlu);font-size:24px;line-height:1.1}
+.kpis span{font-size:11.5px;color:var(--stins)}
+.apel{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.apel span{min-height:38px;display:grid;place-items:center;border-radius:8px;background:var(--panou2);font-size:12.5px;font-weight:600;text-align:center;padding:2px 5px}
+.camp{display:grid;gap:3px}
+.camp small{font-size:11px;color:var(--stins)}
+.camp div{min-height:34px;display:flex;align-items:center;padding:0 10px;background:var(--panou2);border-radius:7px}
+.pozeg{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.pozeg img{width:100%;height:62px;object-fit:cover;border-radius:6px;display:block}
+.tabs{flex:none;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;border-top:1px solid var(--linie);height:50px;background:var(--fond)}
+.tabs span{display:grid;place-items:center;align-content:center;font-size:10px;color:var(--stins);padding:0 1px;text-align:center}
+.tabs span.on{color:var(--ocru);font-weight:600}
+/* Copertă și stadiu */
+.coperta{position:relative;display:grid;align-content:end;min-height:min(70dvh,560px);border-radius:16px;overflow:hidden;padding:clamp(18px,4vw,40px);gap:14px}
+.coperta>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.coperta::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,22,18,.12) 15%,rgba(11,22,18,.9) 72%)}
+.coperta>*:not(img){position:relative;z-index:1}
+.alege{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:9px;max-width:760px}
+.alege button{min-height:82px;padding:13px;text-align:left;background:rgba(26,46,39,.92);border:1px solid var(--linie);border-radius:11px;display:grid;gap:3px;align-content:center}
+.alege b{font-size:16.5px}.alege span{font-size:13.5px;line-height:1.3;color:var(--stins)}
+.stadiu{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.stadiu>div{background:var(--panou);border:1px solid var(--linie);border-radius:12px;padding:15px;display:grid;gap:10px;align-content:start}
+.stadiu h3{font-size:24px}
+.stadiu ul{list-style:none;padding:0;display:grid;gap:8px;font-size:15px;line-height:1.35}
+.link{color:var(--ocru);font-weight:600}
+/* Bara de jos */
+.jos{display:flex;align-items:center;gap:9px;padding:9px max(16px,env(safe-area-inset-right)) calc(env(safe-area-inset-bottom) + 9px) max(16px,env(safe-area-inset-left));border-top:1px solid var(--linie);background:var(--fond)}
+.jos button{min-height:46px;padding:0 18px;border-radius:10px;font-weight:600;font-size:15px}
+#inapoi{border:1px solid var(--linie)}
+#inainte{background:var(--ocru);color:var(--ocru-text);margin-left:auto}
+.jos button[disabled]{opacity:.4;cursor:default}
+#pozitie{font-size:13.5px;color:var(--stins);font-variant-numeric:tabular-nums;white-space:nowrap}
+@media (min-width:860px){
+  .slide.cu-tel{grid-template-columns:minmax(0,1fr) 350px;gap:52px}
+  #scena{padding-top:26px}
+}
+@media (min-width:860px) and (max-height:790px){#scena{padding-top:14px;padding-bottom:14px}.tel{height:calc(100dvh - 158px);min-height:520px}}
+</style>
+</head>
+<body>
+<div class="pagina">
+  <nav class="capitole" aria-label="Capitole">
+    <span class="marca">Green Future Sinaia</span>
+    <div id="butoane" style="display:contents"></div>
+  </nav>
+  <main id="scena" tabindex="-1"></main>
+  <footer class="jos">
+    <button id="inapoi" data-a="inapoi">‹ Înapoi</button>
+    <span id="pozitie" aria-live="polite"></span>
+    <button id="inainte" data-a="inainte">Înainte ›</button>
+  </footer>
+</div>
+<script>
+'use strict';
+const P='../poze/';
+const taburiOaspete=['Acasă','Apartamente','Bistro','Abonamente','Cont'], taburiProp=['Acasă','Rezervări','Mesaje','Mai mult'];
+const tel=(titlu,dreapta,corp,taburi,on,far)=>`<div class="tel" role="img" aria-label="Ecran din aplicație: ${titlu}"><div class="ecr"><div class="ecr-cap"><b>${titlu}</b><span class="mic">${dreapta||''}</span></div><div class="ecr-corp ${far?'far':''}">${corp}</div><div class="tabs">${taburi.map(t=>`<span class="${t===on?'on':''}">${t}</span>`).join('')}</div></div></div>`;
+
+const CAP={acasa:'Început',oaspeti:'Oaspeți',membri:'Membri',proprietari:'Proprietari',stadiu:'Stadiu'};
+const S=[
+ {id:'start',cap:'acasa',copertă:true},
+ {id:'cautare',cap:'oaspeti',et:'Oaspeți',t:'Alegi perioada și vezi ce e liber',p:'Rezervi direct de la proprietar, fără comisionul unei platforme externe.',l:['Cauți după date și numărul de persoane','Calendarul ține cont și de rezervările de pe Booking','Pentru grupuri, recomandă mai multe apartamente'],
+  e:()=>tel('Green Future','Sinaia',`<img class="foto" src="${P}exterior.jpg" alt="Complexul Green Future"><div class="intern"><h3>Apartamente cu wellness, la poalele Bucegilor</h3><div class="doi"><div class="cp"><small>Sosire</small><b>14 noi</b></div><div class="cp"><small>Plecare</small><b>16 noi</b></div></div><div class="cp"><small>Persoane</small><b>2 adulți</b></div><button class="ac" data-a="inainte">Caută apartamente</button></div>`,taburiOaspete,'Acasă',true)},
+ {id:'apartament',cap:'oaspeti',et:'Oaspeți',t:'Fiecare apartament are povestea lui',p:'Pozele, povestea scrisă de proprietar, facilitățile și recenziile sunt pe aceeași pagină.',l:['Studio Dandelion are nota 9,9 din 25 de recenzii pe Booking','Recenziile directe apar separat de nota Booking','Proprietarul scrie singur povestea apartamentului'],
+  e:()=>tel('Studio Dandelion','2+2 persoane',`<img class="foto" src="${P}living.jpg" alt="Living Studio Dandelion"><div class="intern"><div class="r"><div><div class="tit">Booking.com</div><div class="mic">25 de recenzii</div></div><span class="scor">9,9</span></div><div class="poveste">O garsonieră cu suflet, la poalele muntelui: luminoasă, caldă și liniștită.</div><div class="ch"><span>Bucătărie</span><span>Balcon</span><span>Vedere la munte</span><span>Wi-Fi</span></div><button class="ac" data-a="inainte">Vezi disponibilitatea</button></div>`,taburiOaspete,'Apartamente',true)},
+ {id:'rezervare',cap:'oaspeti',et:'Oaspeți',t:'Trimiți cererea, proprietarul confirmă',p:'Perioada rămâne reținută, iar proprietarul răspunde în cel mult 24 de ore.',l:['Fără plată online în această etapă','Prețul se calculează singur, cu tot cu curățenia','Oaspetele își poate urmări sau anula rezervarea'],nota:'Prețul afișat este cel de test.',
+  e:()=>{let c='';['L','M','M','J','V','S','D'].forEach(x=>c+=`<i>${x}</i>`);for(let i=2;i<=29;i++){c+=`<u class="${i<7||i===10||i===11?'x':i===14||i===16?'s':i===15?'b':''}">${i}</u>`}
+   return tel('Rezervare','Studio Dandelion',`<div class="luna">${c}</div><div class="cart"><div class="r"><span>2 nopți × 350 lei</span><span>700 lei</span></div><div class="r"><span>Curățenie</span><span>100 lei</span></div><div class="r tit"><span>Total</span><span>800 lei</span></div></div><button class="ac" data-a="inainte">Trimite cererea</button><div class="mic" style="text-align:center">Răspuns în cel mult 24 de ore</div>`,taburiOaspete,'Apartamente')}},
+ {id:'bistro',cap:'oaspeti',et:'Oaspeți',t:'Comanzi de la bistro, la ușa apartamentului',p:'Meniul Attitude Bistro este în aplicație, iar comanda se leagă automat de sejur.',l:['Alegi apartamentul și produsele','Plata se trece pe nota camerei','Comenzile apar și în contul oaspetelui'],stare:['a','Mod de test, așteaptă acordul Attitude'],
+  e:()=>tel('Attitude Bistro','Meniu',`<img class="foto" style="height:125px" src="${P}bistro.jpg" alt="Attitude Bistro"><div class="intern"><div class="tit">Mic dejun</div><div class="cart"><div class="r"><span>Omletă țărănească</span><b>35 lei</b></div><div class="r"><span>Eggs Benedict</span><b>45 lei</b></div></div><div class="tit">Feluri principale</div><div class="cart"><div class="r"><span>Burger de vită</span><b>60 lei</b></div><div class="r"><span>Gulaș de vită cu couscous</span><b>60 lei</b></div></div><button class="ac" data-a="inainte">Comandă, 95 lei</button></div>`,taburiOaspete,'Bistro',true)},
+ {id:'abonamente',cap:'oaspeti',et:'Oaspeți',t:'Abonamente la piscină, spa și fitness',p:'Spa-ul și sala de fitness sunt deschise oaspeților și vizitatorilor, cu toate tarifele la un loc.',l:['Intrări simple și abonamente lunare','Masaje și produse pentru piscină','Plata cu cardul este pregătită în pagină'],stare:['a','Plata online vine în curând, acum la recepție'],nota:'Spa-ul este închis temporar pentru reparații.',
+  e:()=>tel('Abonamente','Preț adult',`<img class="foto" style="height:125px" src="${P}piscina.jpg" alt="Piscina complexului"><div class="intern"><div class="cart"><div class="r"><span>Intrare luni - joi</span><b>90 lei</b></div><div class="r"><span>Intrare vineri - duminică</span><b>120 lei</b></div><div class="r"><span>8 intrări pe lună</span><b>550 lei</b></div></div><div class="cart"><div class="r"><span>Fitness, o zi</span><b>50 lei</b></div><div class="r"><span>Fitness, o lună</span><b>300 lei</b></div></div></div>`,taburiOaspete,'Abonamente',true)},
+ {id:'chat',cap:'oaspeti',et:'Oaspeți',t:'Vorbești direct cu proprietarul',p:'Întrebările se rezolvă în aplicație, fără numere de telefon publicate pe pagină.',l:['Oaspetele scrie din contul lui','Proprietarul primește notificare pe telefon','Dacă nu are aplicația, primește email'],nota:'Conversație de exemplu.',
+  e:()=>tel('Chat','Studio Dandelion',`<div class="bula">Bună! Putem ajunge pe la ora 14?</div><div class="bula eu">Sigur, vă aștept. Vă trimit detaliile de acces.</div><div class="bula">Mulțumim mult!</div><div class="scrie"><span>Scrie un mesaj</span><b>Trimite</b></div>`,taburiOaspete,'Cont')},
+ {id:'recenzie',cap:'oaspeti',et:'Oaspeți',t:'După plecare, cere singur o recenzie',p:'A doua zi după sejur, oaspetele primește invitația, iar recenzia apare pe pagina apartamentului.',l:['Doar pentru rezervări directe confirmate','O singură recenzie pentru fiecare rezervare','Se publică cu prenumele oaspetelui'],nota:'Text de exemplu. Trimiterea emailului nu a fost încă testată cu o rezervare reală.',
+  e:()=>tel('Recenzie','Studio Dandelion',`<img class="foto r" style="height:145px" src="${P}papadie.jpg" alt="Păpădie sub clopot de sticlă"><h3>Cum a fost sejurul?</h3><div class="mic">Nota ta, de la 1 la 10</div><div class="ch"><span>7</span><span>8</span><span>9</span><span style="background:var(--ocru);color:var(--ocru-text);border-color:var(--ocru)">10</span></div><div class="cart">Totul a fost impecabil, ne întoarcem cu drag.</div><button class="ac" data-a="inainte">Publică recenzia</button>`,taburiOaspete,'Cont')},
+ {id:'club',cap:'membri',et:'Oaspeți care devin membri',t:'Green Future Club: revii și plătești mai puțin',p:'Orice oaspete își poate face cont și devine membru. Nivelul urcă singur, în funcție de sejururi.',l:['Membru, la crearea contului','Silver, 5% reducere după 2 sejururi','Gold, 10% reducere după 5 sejururi','5 comenzi livrate la bistro contează cât un sejur'],nota:'Reducerea se aplică la prețul nopților, la apartamentele ai căror proprietari participă.',
+  e:()=>tel('Contul meu','Bună, Ana!',`<div class="club"><small>Green Future Club</small><h3>Silver</h3><span>5% reducere</span></div><div class="cart nivel"><div><span>Până la Gold</span><b>Încă 3 sejururi</b></div><div class="bara"><i style="width:40%"></i></div></div><div class="cart"><div class="tit">Rezervările mele</div><div class="r"><span>Studio Dandelion</span><span class="st v">Confirmată</span></div><div class="r"><span>Comandă bistro</span><span class="st g">Livrată</span></div></div><button class="ac" data-a="inainte">Vezi ofertele</button>`,taburiOaspete,'Cont')},
+ {id:'oferte',cap:'membri',et:'Oaspeți care devin membri',t:'Oferte personale, direct pe telefon',p:'Membrii primesc oferte pe nivel sau personal, iar reducerea se aplică automat.',l:['Reducere la sejur sau la bistro','Notificare direct pe telefon','Cea mai mare reducere câștigă, nu se adună','O singură folosire de fiecare oaspete'],stare:['v','Notificarea de ofertă, confirmată pe iPhone'],nota:'Ofertă de exemplu.',
+  e:()=>tel('Ofertele mele','',`<div class="cart" style="border-color:var(--ocru)"><div class="eticheta" style="font-size:10.5px">Notificare</div><div class="tit">Ana, revino în Sinaia</div><div class="mic">Ai 15% reducere la următorul sejur.</div></div><img class="foto r" style="height:190px" src="${P}munte.jpg" alt="Vedere la munte"><div class="cart"><div class="r"><div><div class="tit">15% reducere la sejur</div><div class="mic">Valabilă până la 15 decembrie</div></div></div></div><button class="ac" data-a="inainte">Folosește oferta</button>`,taburiOaspete,'Cont')},
+ {id:'panou',cap:'proprietari',et:'Proprietari',t:'Tot apartamentul, de pe telefon',p:'Proprietarul vede dintr-o privire cum merge luna și sună echipa dintr-o singură apăsare.',l:['Grad de ocupare, cu Booking inclus','Venitul din rezervările directe','Apel rapid: curățenie, tehnician, spălătorie','Fiecare vede doar apartamentele lui'],nota:'Cifre de exemplu.',
+  e:()=>tel('Acasă','Luna curentă',`<div class="kpis"><div><b>68%</b><span>grad de ocupare</span></div><div><b>2.100</b><span>lei din platformă</span></div><div><b>1</b><span>rezervare de confirmat</span></div><div><b>2</b><span>mesaje necitite</span></div></div><div class="apel"><span>Femeia de serviciu</span><span>Tehnician</span><span>Spălătorie</span><span style="background:var(--ocru);color:var(--ocru-text)">Chat cu chiriașii</span></div><div class="cart"><div class="r"><b>Studio Dandelion</b><b>2.100 lei</b></div><div class="bara"><i style="width:68%"></i></div><div class="mic">68% ocupare · 20 din 30 de nopți</div></div>`,taburiProp,'Acasă')},
+ {id:'rezervari',cap:'proprietari',et:'Proprietari',t:'Confirmi rezervarea dintr-o apăsare',p:'Primești notificare, confirmi sau refuzi, iar oaspetele este anunțat. Dacă nu răspunzi în 24 de ore, perioada se eliberează.',l:['Toate cererile, într-o singură listă','Contactul oaspetelui este la îndemână','Calendarul se actualizează singur'],nota:'Oaspeți de exemplu.',
+  e:()=>tel('Rezervări','',`<div class="cart"><div class="r"><div><div class="tit">Ana Marinescu</div><div class="mic">14 - 16 noi · 2 adulți</div></div><span class="st a">De confirmat</span></div><div class="r tit"><span>Total</span><span>800 lei</span></div><div class="doi"><button class="ac al" style="min-height:38px">Refuză</button><button class="ac" style="min-height:38px" data-a="inainte">Confirmă</button></div></div><div class="cart"><div class="r"><div><div class="tit">Radu Ionescu</div><div class="mic">21 - 23 noi · 2 adulți</div></div><span class="st v">Confirmată</span></div></div><div class="cart"><div class="r"><div><div class="tit">Maria Stan</div><div class="mic">28 - 30 noi · 3 persoane</div></div><span class="st v">Confirmată</span></div></div>`,taburiProp,'Rezervări')},
+ {id:'mesaje',cap:'proprietari',et:'Proprietari',t:'Răspunzi oaspeților din același loc',p:'Toate conversațiile cu chiriașii sunt în aplicație, iar recenziile primite le vezi în panou.',l:['Notificare la fiecare mesaj nou','Istoricul rămâne pe fiecare oaspete','Recenziile directe sunt adunate la un loc'],nota:'Conversații de exemplu.',
+  e:()=>tel('Mesaje','',`<div class="cart"><div class="r"><div><div class="tit">Ana Marinescu</div><div class="mic">Putem ajunge pe la ora 14?</div></div><span class="st a">Nou</span></div></div><div class="cart"><div class="r"><div><div class="tit">Radu Ionescu</div><div class="mic">Unde parchez când ajung?</div></div><span class="st a">Nou</span></div></div><div class="cart"><div class="r"><div><div class="tit">Maria Stan</div><div class="mic">Mulțumim pentru tot!</div></div><span class="st g">Citit</span></div></div>`,taburiProp,'Mesaje')},
+ {id:'adauga',cap:'proprietari',et:'Proprietari',t:'Îți adaugi singur apartamentul',p:'Completezi datele direct de pe telefon, încarci pozele și trimiți spre publicare.',l:['Nume, capacitate, descriere și facilități','Povestea apartamentului, într-un chenar auriu','Sunt necesare minimum 3 poze, descriere și preț','Apartamentul apare pe site după aprobare'],nota:'Exemplu de completare.',
+  e:()=>tel('Apartament nou','Ciornă',`<div class="camp"><small>Numele apartamentului</small><div>Studio Brad</div></div><div class="doi"><div class="camp"><small>Persoane</small><div>2</div></div><div class="camp"><small>Preț pe noapte</small><div>320 lei</div></div></div><div class="camp"><small>Povestea apartamentului</small><div>Un colț liniștit, cu vedere la brazi.</div></div><div class="pozeg"><img src="${P}dormitor.jpg" alt="Dormitor"><img src="${P}cozy.jpg" alt="Living"><img src="${P}munte.jpg" alt="Vedere"></div><button class="ac" data-a="inainte">Trimite spre publicare</button>`,taburiProp,'Mai mult')},
+ {id:'preturi',cap:'proprietari',et:'Proprietari',t:'Prețuri și calendar, sub control',p:'Proprietarul decide prețurile pe perioade, blochează date și își leagă calendarul de Booking sau Airbnb.',l:['Preț și minim de nopți pe perioade','Date blocate pentru uz personal','Calendarele se sincronizează prin iCal, cu pauză la nevoie','Alege singur dacă participă la Club'],nota:'Valori de exemplu.',
+  e:()=>tel('Studio Dandelion','Setări',`<div class="cart"><div class="tit">Prețuri pe perioade</div><div class="r"><span>20 dec - 5 ian</span><b>480 lei</b></div><div class="r"><span>Februarie, sezon de schi</span><b>420 lei</b></div></div><div class="cart"><div class="tit">Date blocate</div><div class="r"><span>10 - 12 ian</span><span class="mic">Personal</span></div></div><div class="cart"><div class="r"><span>Calendar Booking</span><span class="st v">Conectat</span></div><div class="r"><span>Green Future Club</span><span class="st v">Particip</span></div></div><button class="ac" data-a="inainte">Salvează</button>`,taburiProp,'Mai mult')},
+ {id:'stadiu',cap:'stadiu',stadiu:true}
+];
+
+let i=0;
+const unicCap=[...new Set(S.map(x=>x.cap))];
+const $=id=>document.getElementById(id);
+function slide(x){
+  if(x.copertă) return `<div class="slide"><section class="coperta"><img src="${P}piscina.jpg" alt="Piscina interioară a complexului"><div class="eticheta">Prezentarea aplicației</div><h1 style="font-size:clamp(42px,8vw,78px);line-height:1">Green Future Sinaia</h1><p style="font-size:clamp(16px,1.8vw,20px);line-height:1.45;max-width:54ch">O singură aplicație pentru oaspeții care rezervă direct și pentru proprietarii apartamentelor. Pe iPhone, Android și pe site.</p><div class="alege"><button data-a="cap" data-v="oaspeti"><b>Oaspeți</b><span>Rezervare, bistro, abonamente, chat</span></button><button data-a="cap" data-v="membri"><b>Membri</b><span>Green Future Club și oferte</span></button><button data-a="cap" data-v="proprietari"><b>Proprietari</b><span>Rezervări, venituri, apartamente</span></button></div></section></div>`;
+  if(x.stadiu) return `<div class="slide"><div class="text"><div class="eticheta">Unde suntem</div><h2>Ce funcționează și ce urmează</h2></div><div class="stadiu"><div><h3 style="color:var(--verde)">Funcționează</h3><ul><li>Rezervări directe, activate pentru Studio Dandelion</li><li>Cont de oaspete și Green Future Club</li><li>Oferte personalizate</li><li>Chat oaspete - proprietar</li><li>Panoul proprietarului</li><li>Notificări pe iPhone, confirmate</li></ul></div><div><h3 style="color:var(--ocru)">În testare</h3><ul><li>Aplicația iPhone, în TestFlight</li><li>Aplicația Android, versiune de test</li><li>Notificările pe Android</li><li>Emailurile către oaspeți, cu o rezervare reală</li><li>Comenzile la bistro, în mod de test</li></ul></div><div><h3>Urmează</h3><ul><li>Publicare în App Store și Google Play</li><li>Plata cu cardul la bistro și abonamente, după acordul Attitude pentru bistro</li><li>Comenzi reale la bistro</li><li>Mai multe apartamente în platformă</li></ul></div></div><p class="nota">Site: <a class="link" href="https://greenfuturesinaia.com" target="_blank" rel="noopener">greenfuturesinaia.com</a></p></div>`;
+  return `<div class="slide cu-tel"><section class="text"><div class="eticheta">${x.et}</div><h2>${x.t}</h2><p>${x.p}</p><ul class="puncte">${x.l.map(p=>`<li>${p}</li>`).join('')}</ul>${x.stare?`<span class="stare ${x.stare[0]}">${x.stare[1]}</span>`:''}${x.nota?`<p class="nota">${x.nota}</p>`:''}</section>${x.e()}</div>`;
+}
+function arata(n,faraHash){
+  i=Math.max(0,Math.min(S.length-1,n));const x=S[i];
+  $('scena').innerHTML=slide(x);$('scena').scrollTop=0;
+  $('butoane').innerHTML=unicCap.map(c=>`<button data-a="cap" data-v="${c}" aria-current="${c===x.cap}">${CAP[c]}</button>`).join('');
+  $('inapoi').disabled=i===0;$('inainte').disabled=i===S.length-1;
+  $('pozitie').textContent=`${i+1} din ${S.length}`;
+  const b=document.querySelector('#butoane [aria-current=true]');if(b)b.scrollIntoView({block:'nearest',inline:'center'});
+  if(!faraHash) try{history.replaceState(null,'','#'+x.id)}catch(e){}
+}
+const ACT={inapoi(){arata(i-1)},inainte(){arata(i+1)},cap(v){arata(S.findIndex(x=>x.cap===v))}};
+document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(!b||b.disabled)return;ACT[b.dataset.a](b.dataset.v)});
+document.addEventListener('keydown',ev=>{if(ev.key==='ArrowRight'||ev.key==='PageDown')arata(i+1);if(ev.key==='ArrowLeft'||ev.key==='PageUp')arata(i-1)});
+window.addEventListener('hashchange',()=>{const n=S.findIndex(x=>'#'+x.id===location.hash);if(n>=0&&n!==i)arata(n,true)});
+const start=S.findIndex(x=>'#'+x.id===location.hash);arata(start>=0?start:0,true);
+</script>
+</body>
+</html>
