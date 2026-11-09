@@ -309,7 +309,7 @@ const au=new Audio();au.preload='auto';let sunet=true,auto=false,deblocat=false,
 function stare(){const a=$('auto');a.setAttribute('aria-pressed',auto);a.innerHTML=auto?'⏸<span class="t"> Pauză</span>':'▶<span class="t"> Automat</span>';a.setAttribute('aria-label',auto?'Pune pauză':'Pornește prezentarea automată');const s=$('sunet');s.textContent=sunet?'🔊':'🔇';s.setAttribute('aria-pressed',sunet);s.setAttribute('aria-label',sunet?'Oprește vocea':'Pornește vocea')}
 function asteapta(ms){clearTimeout(tAuto);if(auto)tAuto=setTimeout(urm,ms)}
 function citire(){const t=($('scena').querySelector('h1,h2')||{}).innerText||'',q=($('scena').querySelector('.poveste p,.coperta p')||{}).innerText||'';return Math.max(5000,(t+' '+q).split(/\s+/).length*400)}
-function voce(){clearTimeout(tAuto);au.pause();if(!deblocat)return;if(!sunet){asteapta(citire());return}au.src='voce/'+String(poz+1).padStart(2,'0')+'.m4a';const p=au.play();if(p&&p.catch)p.catch(()=>asteapta(citire()))}
+function voce(){clearTimeout(tAuto);au.pause();if(!deblocat)return;if(!sunet){asteapta(citire());return}au.src='voce/'+String(poz+1).padStart(2,'0')+'.m4a?v=2';const p=au.play();if(p&&p.catch)p.catch(()=>asteapta(citire()))}
 function urm(){if(poz>=LIN.length-1){auto=false;stare();return}arata(poz+1)}
 au.addEventListener('ended',()=>asteapta(1200));au.addEventListener('error',()=>asteapta(citire()));
 const ACT={next(){arata(poz+1)},inapoi(){arata(poz-1)},start(){arata(-1)},flux(v){arata(LIN.findIndex(x=>x.f.id===v))},
